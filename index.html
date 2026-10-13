@@ -232,7 +232,7 @@ a{color:var(--primary)}
 }
 @media (min-width:900px){
   body{padding-block:28px 48px}
-  .shell{max-width:1080px;display:grid;grid-template-columns:76px minmax(0,1fr);gap:28px;align-items:start}
+  .shell{max-width:1180px;display:grid;grid-template-columns:76px minmax(0,1fr);gap:28px;align-items:start}
   .rail{display:flex;flex-direction:column;gap:10px;position:sticky;top:28px;padding:12px 10px;border-radius:38px;background:var(--glass);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid var(--edge);box-shadow:var(--shadow)}
   .rail button{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;color:var(--muted)}
   .rail button svg{width:24px;height:24px}
@@ -749,10 +749,10 @@ function viewBudget(){
   h+='<div class="field"><label>Gaya acara</label><div class="seg" role="group" aria-label="Gaya acara">'+["hemat","standar","premium"].map(function(t){return '<button data-act="tier" data-t="'+t+'" class="'+(b.tier===t?'on':'')+'" style="text-transform:capitalize">'+t+'</button>';}).join("")+'</div></div>';
   h+='<div id="venueBox"></div>';
   h+='<div class="g pad"><h3 style="font-size:16px;margin-bottom:12px">Porsi anggaran</h3><div id="shareBox"></div></div>';
-  h+='</div><div class="col">';
-  h+='<div class="g pad"><h3 style="font-size:16px;margin-bottom:4px">Rincian biaya</h3><div class="items" id="itemsBox"></div></div>';
   h+='<div id="goldBox"></div>';
   h+='<div class="g pad"><h3 style="font-size:16px">Sumber data</h3><ul class="src-list" style="margin-top:8px">'+SOURCES.map(function(s){return '<li><a href="'+s[1]+'" target="_blank" rel="noopener">'+esc(s[0])+'</a></li>';}).join("")+'</ul></div>';
+  h+='</div><div class="col">';
+  h+='<div class="g pad"><h3 style="font-size:16px;margin-bottom:4px">Rincian biaya</h3><div class="items" id="itemsBox"></div></div>';
   h+='<div class="note small">Label <b>Ada sumber</b> berarti angkanya turun dari harga di artikel di atas (2019-2026) lalu disesuaikan. Label <b>Estimasi</b> berarti kisaran pasar dari asumsi umum yang belum diverifikasi ke vendor. Faktor harga kota ('+String(A.lvl).replace(".",",")+'× untuk '+esc(A.name.split(",")[0])+') juga estimasi. Anggap hasil ini titik awal, lalu ganti dengan penawaran vendor lewat tombol Ubah.</div>';
   return h+'</div></div>';
 }
