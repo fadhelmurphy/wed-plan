@@ -144,6 +144,12 @@ a{color:var(--primary)}
 .price{font-family:var(--font-d);font-weight:600;color:var(--primary);font-size:17px;white-space:nowrap}
 .note{background:var(--soft);border-radius:20px;padding:14px 16px;font-size:13px}
 .chart{width:100%;height:auto;display:block}
+.pager{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}
+.pager .pg{min-width:40px;height:40px;padding-inline:12px;border-radius:20px;background:var(--glass);border:1px solid var(--edge);font-weight:500;font-variant-numeric:tabular-nums;color:var(--ink)}
+.pager .pg.on{background:var(--primary);color:var(--on-primary);border-color:transparent}
+.pager .pg:disabled{opacity:.4;cursor:default}
+.pager .gap{color:var(--muted);padding-inline:2px}
+.pinfo{text-align:center;font-size:12px;color:var(--muted)}
 .empty{text-align:center;padding:26px 8px;color:var(--muted)}
 
 .tag{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:500;border:1px solid var(--primary);color:var(--primary);white-space:nowrap}
@@ -222,7 +228,7 @@ a{color:var(--primary)}
 .src-list{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:12px}
 
 @media print{
-  .tabbar,.rail,.topbar,.dots,.scrim,.total .btn,.art{display:none!important}
+  .pager,.pinfo,.tabbar,.rail,.topbar,.dots,.scrim,.total .btn,.art{display:none!important}
   body{background:#fff!important;padding:0}
   .g,.total{box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 }
@@ -560,6 +566,28 @@ var AVG=["linear-gradient(135deg,#9A8DEA,#6B6DD9)","linear-gradient(135deg,#F5B9
 function avInit(name,i){return '<span class="av ini" style="background:'+AVG[i%3]+'">'+ini(name)+'</span>';}
 
 /* ============ SHARED PIECES ============ */
+var PAGE_SIZE=8;
+function pageSlice(key,arr,size){
+  UI.pg=UI.pg||{};
+  var pages=Math.max(1,Math.ceil(arr.length/size)), cur=Math.min(Math.max(UI.pg[key]||1,1),pages);
+  var from=(cur-1)*size;
+  return {key:key,items:arr.slice(from,from+size),cur:cur,pages:pages,from:from,to:Math.min(from+size,arr.length),total:arr.length};
+}
+function pager(pg){
+  if(pg.pages<=1) return "";
+  var nums=[1];
+  for(var i=pg.cur-1;i<=pg.cur+1;i++) if(i>1&&i<pg.pages) nums.push(i);
+  if(pg.pages>1) nums.push(pg.pages);
+  var out='<nav class="pager" aria-label="Halaman daftar"><button class="pg" data-act="page" data-k="'+pg.key+'" data-p="'+(pg.cur-1)+'"'+(pg.cur<=1?' disabled':'')+' aria-label="Halaman sebelumnya">'+ic("chevL")+'</button>';
+  var last=0;
+  nums.forEach(function(n){
+    if(n-last>1) out+='<span class="gap" aria-hidden="true">...</span>';
+    out+='<button class="pg'+(n===pg.cur?' on':'')+'" data-act="page" data-k="'+pg.key+'" data-p="'+n+'"'+(n===pg.cur?' aria-current="page"':'')+' aria-label="Halaman '+n+'">'+n+'</button>';
+    last=n;
+  });
+  out+='<button class="pg" data-act="page" data-k="'+pg.key+'" data-p="'+(pg.cur+1)+'"'+(pg.cur>=pg.pages?' disabled':'')+' aria-label="Halaman berikutnya">'+ic("chevR")+'</button></nav>';
+  return out+'<p class="pinfo">Menampilkan '+(pg.from+1)+'-'+pg.to+' dari '+pg.total+'</p>';
+}
 function topbar(o){
   o=o||{};
   return '<div class="topbar">'
@@ -609,7 +637,8 @@ function viewGedung(){
     h+='<div class="g empty">Coba longgarkan filter jumlah tamu atau anggaran.<br><br><button class="btn" data-act="resetf">Reset filter</button></div>';
   } else {
     if(nearest>60) h+='<div class="note">Data gedung belum ada di sekitar '+esc(A.name)+'. Gedung di bawah ini yang terdekat, dan jaraknya cukup jauh.</div>';
-    h+='<div class="cols">'+list.map(function(x,i){return venueRow(x,i);}).join("")+'</div>';
+    var pg=pageSlice("gedung",list,PAGE_SIZE);
+    h+='<div id="listTop"></div><div class="cols">'+pg.items.map(function(x,i){return venueRow(x,pg.from+i);}).join("")+'</div>'+pager(pg);
     h+='<p class="small muted">Harga memakai data artikel 2019-2020 yang disesuaikan ke 2026 dengan kenaikan 4,5% per tahun. Jarak dihitung garis lurus dari pusat daerah yang dipilih. Konfirmasi ke pengelola sebelum booking.'+dataNote()+'</p>';
   }
   return h;
@@ -695,10 +724,22 @@ function viewVendor(){
   else {
     var list=vendorsFor(c.id);
     if(list.length){
-      var inArea=list.filter(function(x){return x.covered;}), out=list.filter(function(x){return !x.covered;});
-      if(inArea.length) h+='<h2 style="font-size:19px">Melayani '+esc(first)+'</h2><div class="cols">'+inArea.map(vendorRow).join("")+'</div>';
-      else h+='<div class="note">Belum ada '+c.label+' di data untuk daerah ini. Di bawah ini yang ada di kota lain.</div>';
-      if(out.length) h+='<h2 style="font-size:19px">Di kota lain</h2><div class="cols">'+out.map(vendorRow).join("")+'</div>';
+      var hasIn=list.some(function(x){return x.covered;});
+      if(!hasIn) h+='<div class="note">Belum ada '+c.label+' di data untuk daerah ini. Di bawah ini yang ada di kota lain.</div>';
+      var pg=pageSlice("vendor",list,PAGE_SIZE), prevG=null, seg="";
+      h+='<div id="listTop"></div>';
+      pg.items.forEach(function(x,i){
+        var g=x.covered?"in":"out";
+        if(g!==prevG){
+          if(seg){ h+='<div class="cols">'+seg+'</div>'; seg=""; }
+          if(g==="in") h+='<h2 style="font-size:19px">Melayani '+esc(first)+'</h2>';
+          else if(hasIn) h+='<h2 style="font-size:19px">Di kota lain</h2>';
+          prevG=g;
+        }
+        seg+=vendorRow(x,pg.from+i);
+      });
+      if(seg) h+='<div class="cols">'+seg+'</div>';
+      h+=pager(pg);
     } else {
       h+='<div class="note">Belum ada vendor '+c.label+' bernama di data. Pakai kisaran biaya di bawah untuk menyusun anggaran, lalu minta penawaran dari 2-3 vendor di daerahmu.</div>';
     }
@@ -922,10 +963,10 @@ document.addEventListener("click",function(e){
   var el=e.target.closest("[data-act]"); if(!el) return;
   var a=el.getAttribute("data-act"), id=el.getAttribute("data-id");
   if(a==="closesheet"){ if(el.classList.contains("scrim")&&e.target!==el) return; UI.sheet=null; render(true); return; }
-  if(a==="tab"){ S.tab=el.getAttribute("data-t"); UI.detail=null; UI.sheet=null; save(); render(); return; }
+  if(a==="tab"){ UI.pg={}; S.tab=el.getAttribute("data-t"); UI.detail=null; UI.sheet=null; save(); render(); return; }
   if(a==="area"){ UI.sheet="area"; UI.q=""; render(true); return; }
   if(a==="filter"){ UI.sheet="filter"; render(true); return; }
-  if(a==="setarea"){ S.area=id; UI.sheet=null; save(); render(true); return; }
+  if(a==="setarea"){ UI.pg={}; S.area=id; UI.sheet=null; save(); render(true); return; }
   if(a==="venue"){ UI.scroll=window.scrollY; UI.detail=id; render(); return; }
   if(a==="back"){ UI.detail=null; render(true); window.scrollTo(0,UI.scroll); return; }
   if(a==="fav"){ var i=S.favs.indexOf(id); if(i>-1) S.favs.splice(i,1); else S.favs.push(id); save(); render(true); return; }
@@ -935,10 +976,11 @@ document.addEventListener("click",function(e){
   if(a==="toggle"){ S.b.on[id]=(S.b.on[id]===false); save(); paintBudget(); return; }
   if(a==="edit"){ UI.editing=(UI.editing===id?null:id); paintBudget(); var o=$("#in-ov"); if(o) o.focus(); return; }
   if(a==="ovreset"){ delete S.b.over[id]; UI.editing=null; save(); paintBudget(); return; }
-  if(a==="vcat"){ S.vcat=id; save(); render(true); return; }
-  if(a==="ftype"){ S.f.type=el.getAttribute("data-v"); save(); render(true); return; }
-  if(a==="fsort"){ S.f.sort=el.getAttribute("data-v"); save(); render(true); return; }
-  if(a==="resetf"){ S.f={guests:0,max:0,type:"semua",sort:"dekat"}; save(); render(true); return; }
+  if(a==="vcat"){ UI.pg={}; S.vcat=id; save(); render(true); return; }
+  if(a==="ftype"){ UI.pg={}; S.f.type=el.getAttribute("data-v"); save(); render(true); return; }
+  if(a==="fsort"){ UI.pg={}; S.f.sort=el.getAttribute("data-v"); save(); render(true); return; }
+  if(a==="resetf"){ UI.pg={}; S.f={guests:0,max:0,type:"semua",sort:"dekat"}; save(); render(true); return; }
+  if(a==="page"){ UI.pg=UI.pg||{}; UI.pg[el.getAttribute("data-k")]=Number(el.getAttribute("data-p")); render(true); var lt=document.getElementById("listTop"); if(lt) window.scrollTo(0,Math.max(0,lt.getBoundingClientRect().top+window.scrollY-20)); return; }
   if(a==="pdf"){ downloadPdf(); return; }
   if(a==="calnav"){ var pp=curYM().split("-"), dd=new Date(+pp[0],+pp[1]-1+Number(el.getAttribute("data-v")),1); UI.cal=dd.getFullYear()+"-"+p2(dd.getMonth()+1); render(true); return; }
   if(a==="pickday"){ var key=el.getAttribute("data-d"); S.date=(S.date===key&&el.closest(".calg")?"":key); UI.cal=null; save(); render(true); return; }
@@ -960,7 +1002,7 @@ document.addEventListener("input",function(e){
 });
 document.addEventListener("change",function(e){
   var k=e.target.getAttribute&&e.target.getAttribute("data-in");
-  if(k==="fguests"||k==="fmax") render(true);
+  if(k==="fguests"||k==="fmax"){ UI.pg={}; render(true); }
 });
 document.addEventListener("keydown",function(e){ if(e.key==="Escape"&&UI.sheet){UI.sheet=null; render(true);} });
 var DATA_META=null;
