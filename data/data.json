@@ -1,0 +1,821 @@
+{
+ "updatedAt": "2026-10-13T01:37:50.342Z",
+ "mode": "awal",
+ "gold": {
+  "price": 2653000,
+  "asOf": "27 September 2026",
+  "source": "Bisnis.com (Antam di Pegadaian)",
+  "stale": false
+ },
+ "osmCount": 0,
+ "warnings": [],
+ "venues": [
+  {
+   "id": "arsip",
+   "name": "Gedung Arsip Nasional",
+   "area": "jakbar",
+   "addr": "Jl. Gajah Mada No. 111, Taman Sari, Jakarta Barat",
+   "lat": -6.1486,
+   "lng": 106.8165,
+   "cap": 1500,
+   "kind": "Sewa gedung",
+   "cat": "tidak",
+   "year": 2020,
+   "phone": "021 6347744",
+   "src": "Cermati, Mar 2020",
+   "pkgs": [
+    {
+     "n": "Sewa 6 jam",
+     "p": 30000000,
+     "unit": "sewa"
+    }
+   ]
+  },
+  {
+   "id": "lemhannas",
+   "name": "Gedung Panca Gatra Lemhannas RI",
+   "area": "jakpus",
+   "addr": "Jl. Kebon Siri No. 24-28, Gambir, Jakarta Pusat",
+   "lat": -6.185,
+   "lng": 106.83,
+   "cap": 1500,
+   "kind": "Sewa gedung",
+   "cat": "tidak",
+   "year": 2020,
+   "phone": "0856 9205 0150",
+   "src": "Cermati, Mar 2020",
+   "pkgs": [
+    {
+     "n": "Sewa siang",
+     "p": 22000000,
+     "unit": "sewa"
+    },
+    {
+     "n": "Sewa malam",
+     "p": 23000000,
+     "unit": "sewa"
+    }
+   ]
+  },
+  {
+   "id": "marinir",
+   "name": "Graha Marinir Panti Perwira",
+   "area": "jakpus",
+   "addr": "Jl. Prajurit KKO Usman dan Harun No. 40, Kwitang, Jakarta Pusat",
+   "lat": -6.179,
+   "lng": 106.837,
+   "cap": 1200,
+   "kind": "Sewa gedung",
+   "cat": "tidak",
+   "year": 2020,
+   "phone": null,
+   "src": "Cermati, Mar 2020",
+   "pkgs": [
+    {
+     "n": "Sewa gedung",
+     "p": 20000000,
+     "unit": "sewa"
+    }
+   ]
+  },
+  {
+   "id": "kriya",
+   "name": "Rumah Kriya Asri",
+   "area": "jaksel",
+   "addr": "Jl. Ampera Raya No. 1000, Cilandak Timur, Jakarta Selatan",
+   "lat": -6.292,
+   "lng": 106.804,
+   "cap": null,
+   "kind": "Sewa gedung",
+   "cat": "tidak",
+   "year": 2020,
+   "phone": null,
+   "src": "Cermati, Mar 2020",
+   "pkgs": [
+    {
+     "n": "Senin-Kamis",
+     "p": 17500000,
+     "unit": "sewa"
+    },
+    {
+     "n": "Jumat-Minggu",
+     "p": 20000000,
+     "unit": "sewa"
+    }
+   ]
+  },
+  {
+   "id": "ap1",
+   "name": "Graha Angkasa Pura 1",
+   "area": "jakpus",
+   "addr": "Jl. Merpati 3 Blok B Kav 2, Kemayoran, Jakarta",
+   "lat": -6.161,
+   "lng": 106.842,
+   "cap": 1000,
+   "kind": "Sewa gedung",
+   "cat": "tidak",
+   "year": 2020,
+   "phone": "021 6541961",
+   "src": "Cermati, Mar 2020",
+   "pkgs": [
+    {
+     "n": "Senin-Kamis, siang",
+     "p": 13500000,
+     "unit": "sewa"
+    },
+    {
+     "n": "Senin-Kamis, malam",
+     "p": 15000000,
+     "unit": "sewa"
+    },
+    {
+     "n": "Sabtu-Minggu, siang",
+     "p": 15000000,
+     "unit": "sewa"
+    },
+    {
+     "n": "Sabtu-Minggu, malam",
+     "p": 16500000,
+     "unit": "sewa"
+    }
+   ],
+   "extra": "Akad nikah menambah sekitar Rp2 jt."
+  },
+  {
+   "id": "aldevco",
+   "name": "Aldevco Octagon",
+   "area": "jaksel",
+   "addr": "Jl. Warung Buncit Raya No. 75, Kalibata, Jakarta Selatan",
+   "lat": -6.256,
+   "lng": 106.839,
+   "cap": 800,
+   "kind": "Sewa gedung",
+   "cat": "tidak",
+   "year": 2020,
+   "phone": "021 7974774",
+   "src": "Cermati, Mar 2020",
+   "pkgs": [
+    {
+     "n": "Siang (kapasitas 600)",
+     "p": 10500000,
+     "unit": "sewa"
+    },
+    {
+     "n": "Malam (kapasitas 800)",
+     "p": 14000000,
+     "unit": "sewa"
+    }
+   ]
+  },
+  {
+   "id": "makarti",
+   "name": "Balai Makarti Muktitama",
+   "area": "jaksel",
+   "addr": "Jl. TMP Kalibata No. 17, Pancoran, Jakarta Selatan",
+   "lat": -6.257,
+   "lng": 106.85,
+   "cap": 800,
+   "kind": "Sewa gedung",
+   "cat": "tidak",
+   "year": 2020,
+   "phone": "021 7993376",
+   "src": "Cermati, Mar 2020",
+   "pkgs": [
+    {
+     "n": "Sewa gedung",
+     "p": 10000000,
+     "unit": "sewa"
+    }
+   ]
+  },
+  {
+   "id": "puspa",
+   "name": "Puspa Pesona Taman Anggrek",
+   "area": "jaktim",
+   "addr": "Jl. Pinang Ranti Timur, Taman Mini, Jakarta Timur",
+   "lat": -6.303,
+   "lng": 106.895,
+   "cap": 100,
+   "kind": "Sewa gedung",
+   "cat": "tidak",
+   "year": 2020,
+   "phone": "0812 9600 940",
+   "src": "Cermati, Mar 2020",
+   "pkgs": [
+    {
+     "n": "Siang (standing party)",
+     "p": 10000000,
+     "unit": "sewa"
+    },
+    {
+     "n": "Malam",
+     "p": 11000000,
+     "unit": "sewa"
+    }
+   ],
+   "extra": "Akad nikah menambah sekitar Rp2 jt."
+  },
+  {
+   "id": "azila",
+   "name": "Azila Villa",
+   "area": "jaktim",
+   "addr": "Jl. Damai PBSI No. 2A, Cipayung, Jakarta Timur",
+   "lat": -6.327,
+   "lng": 106.9,
+   "cap": 400,
+   "kind": "Sewa gedung",
+   "cat": "tidak",
+   "year": 2020,
+   "phone": null,
+   "src": "Cermati, Mar 2020",
+   "pkgs": [
+    {
+     "n": "Resepsi, setengah area",
+     "p": 9500000,
+     "unit": "sewa"
+    },
+    {
+     "n": "Resepsi, area penuh",
+     "p": 12000000,
+     "unit": "sewa"
+    }
+   ]
+  },
+  {
+   "id": "bandar",
+   "name": "Bandar Djakarta Alam Sutera",
+   "area": "alsut",
+   "addr": "Alam Sutera, Tangerang",
+   "lat": -6.226,
+   "lng": 106.656,
+   "cap": null,
+   "kind": "Paket gedung",
+   "cat": "cek",
+   "year": 2019,
+   "phone": "021 5314 0388",
+   "src": "Popbela, Mei 2019",
+   "pkgs": [
+    {
+     "n": "Paket Meneer (min. 300 orang)",
+     "p": 42000000,
+     "unit": "sewa"
+    },
+    {
+     "n": "Paket Nyai (min. 500 orang)",
+     "p": 80000000,
+     "unit": "sewa"
+    }
+   ]
+  },
+  {
+   "id": "radiant",
+   "name": "The Radiant Center",
+   "area": "ciputat",
+   "addr": "Ciputat, Tangerang Selatan",
+   "lat": -6.31,
+   "lng": 106.755,
+   "cap": 750,
+   "kind": "Paket gedung",
+   "cat": "cek",
+   "year": 2019,
+   "phone": "0858 9617 2825",
+   "src": "Popbela, Mei 2019",
+   "pkgs": [
+    {
+     "n": "Paket 350 orang",
+     "p": 79600000,
+     "unit": "sewa"
+    },
+    {
+     "n": "Paket 500 orang",
+     "p": 93000000,
+     "unit": "sewa"
+    },
+    {
+     "n": "Paket 750 orang",
+     "p": 107600000,
+     "unit": "sewa"
+    }
+   ]
+  },
+  {
+   "id": "springs",
+   "name": "Royal Ballroom The Springs Club",
+   "area": "serpong",
+   "addr": "Summarecon Serpong, Tangerang",
+   "lat": -6.237,
+   "lng": 106.629,
+   "cap": 400,
+   "kind": "Paket gedung",
+   "cat": "cek",
+   "year": 2019,
+   "phone": "021 2917 1515",
+   "src": "Popbela, Mei 2019",
+   "pkgs": [
+    {
+     "n": "Paket Crystal (400 tamu)",
+     "p": 248800000,
+     "unit": "sewa"
+    }
+   ]
+  },
+  {
+   "id": "ice",
+   "name": "ICE BSD",
+   "area": "bsd",
+   "addr": "BSD City, Tangerang Selatan",
+   "lat": -6.3017,
+   "lng": 106.6416,
+   "cap": 10000,
+   "kind": "Paket per tamu",
+   "cat": "ya",
+   "year": 2019,
+   "phone": "021 2971 4600",
+   "src": "Popbela, Mei 2019",
+   "pkgs": [
+    {
+     "n": "Lily 1 (min. 400 tamu)",
+     "p": 335000,
+     "min": 400,
+     "unit": "pax"
+    },
+    {
+     "n": "Lily 2 (min. 600 tamu)",
+     "p": 347000,
+     "min": 600,
+     "unit": "pax"
+    },
+    {
+     "n": "Lavender (min. 1.000 tamu)",
+     "p": 650000,
+     "min": 1000,
+     "unit": "pax"
+    }
+   ]
+  },
+  {
+   "id": "chakra",
+   "name": "Chakra Wedding Hall",
+   "area": "bsd",
+   "addr": "BSD City, Tangerang Selatan",
+   "lat": -6.3,
+   "lng": 106.662,
+   "cap": 400,
+   "kind": "Paket gedung",
+   "cat": "cek",
+   "year": 2019,
+   "phone": "0878 5356 5002",
+   "src": "Popbela, Mei 2019",
+   "pkgs": [
+    {
+     "n": "Chakra (200 orang)",
+     "p": 120000000,
+     "unit": "sewa"
+    },
+    {
+     "n": "Amaryllis (400 orang)",
+     "p": 145000000,
+     "unit": "sewa"
+    },
+    {
+     "n": "Bluebells",
+     "p": 175000000,
+     "unit": "sewa"
+    }
+   ]
+  },
+  {
+   "id": "santika",
+   "name": "Hotel Santika Premiere Bintaro",
+   "area": "bintaro",
+   "addr": "Bintaro, Pondok Aren, Tangerang Selatan",
+   "lat": -6.279,
+   "lng": 106.72,
+   "cap": 600,
+   "kind": "Paket hotel",
+   "cat": "cek",
+   "year": 2019,
+   "phone": "0812 1092 8056",
+   "src": "Popbela, Mei 2019",
+   "pkgs": [
+    {
+     "n": "Silver (400 tamu)",
+     "p": 140000000,
+     "unit": "sewa"
+    },
+    {
+     "n": "Gold (500 tamu)",
+     "p": 175000000,
+     "unit": "sewa"
+    },
+    {
+     "n": "Platinum (600 tamu)",
+     "p": 225000000,
+     "unit": "sewa"
+    }
+   ]
+  },
+  {
+   "id": "sabuga",
+   "name": "Sasana Budaya Ganesha (Sabuga)",
+   "area": "bandung",
+   "addr": "Jl. Tamansari No. 73, Bandung",
+   "lat": -6.8933,
+   "lng": 107.6103,
+   "cap": null,
+   "kind": "Sewa gedung",
+   "cat": "cek",
+   "year": null,
+   "phone": null,
+   "src": "Belum ada harga di data",
+   "pkgs": []
+  },
+  {
+   "id": "tentrem",
+   "name": "Hotel Tentrem Yogyakarta",
+   "area": "yogya",
+   "addr": "Jl. P. Mangkubumi No. 72A, Yogyakarta",
+   "lat": -7.7806,
+   "lng": 110.3668,
+   "cap": null,
+   "kind": "Paket hotel",
+   "cat": "cek",
+   "year": null,
+   "phone": null,
+   "src": "Belum ada harga di data",
+   "pkgs": []
+  },
+  {
+   "id": "ambarrukmo",
+   "name": "Royal Ambarrukmo Yogyakarta",
+   "area": "yogya",
+   "addr": "Jl. Laksda Adisucipto No. 81, Yogyakarta",
+   "lat": -7.7835,
+   "lng": 110.4012,
+   "cap": null,
+   "kind": "Paket hotel",
+   "cat": "cek",
+   "year": null,
+   "phone": null,
+   "src": "Belum ada harga di data",
+   "pkgs": []
+  },
+  {
+   "id": "majapahit",
+   "name": "Hotel Majapahit Surabaya",
+   "area": "surabaya",
+   "addr": "Jl. Tunjungan No. 65, Surabaya",
+   "lat": -7.2617,
+   "lng": 112.7385,
+   "cap": null,
+   "kind": "Paket hotel",
+   "cat": "cek",
+   "year": null,
+   "phone": null,
+   "src": "Belum ada harga di data",
+   "pkgs": []
+  }
+ ],
+ "vendors": [
+  {
+   "id": "v-bantu",
+   "name": "Bantu Manten",
+   "cat": "wo",
+   "home": "jaksel",
+   "cov": [
+    "jabodetabek"
+   ],
+   "loc": "Jagakarsa, Jakarta Selatan",
+   "price": "Mulai sekitar Rp50 jt",
+   "ig": "bantumanten",
+   "src": "Orami, 2024"
+  },
+  {
+   "id": "v-artea",
+   "name": "Artea Event Organizer",
+   "cat": "wo",
+   "home": "jaksel",
+   "cov": [
+    "jabodetabek"
+   ],
+   "loc": "Kebayoran Lama, Jakarta Selatan",
+   "price": null,
+   "ig": "arteaorganizer",
+   "src": "Orami, 2024"
+  },
+  {
+   "id": "v-topfusion",
+   "name": "Top Fusion Corporate",
+   "cat": "wo",
+   "home": "jaksel",
+   "cov": [
+    "jabodetabek"
+   ],
+   "loc": "Cilandak, Jakarta Selatan",
+   "price": "Puluhan hingga ratusan juta",
+   "ig": null,
+   "src": "Orami, 2024"
+  },
+  {
+   "id": "v-leblanc",
+   "name": "Le Blanc Wedding Planner & Organizer",
+   "cat": "wo",
+   "home": "jaksel",
+   "cov": [
+    "jabodetabek"
+   ],
+   "loc": "Kebayoran Baru, Jakarta Selatan",
+   "price": "Menyesuaikan anggaran pasangan",
+   "ig": "leblanc_wo",
+   "src": "Orami, 2024"
+  },
+  {
+   "id": "v-sinambi",
+   "name": "Sinambi Wedding",
+   "cat": "wo",
+   "home": "jaktim",
+   "cov": [
+    "jabodetabek"
+   ],
+   "loc": "Jatinegara, Jakarta Timur",
+   "price": null,
+   "ig": null,
+   "web": "sinambi.com/wedding",
+   "src": "Orami, 2024"
+  },
+  {
+   "id": "v-mke",
+   "name": "MKE Wedding Organizer",
+   "cat": "wo",
+   "home": "jakut",
+   "cov": [
+    "jabodetabek"
+   ],
+   "loc": "Jakarta Utara",
+   "price": null,
+   "ig": "multikreasienterprise",
+   "src": "Orami, 2024"
+  },
+  {
+   "id": "v-optima",
+   "name": "Optima Wedding Planner",
+   "cat": "wo",
+   "home": "jaktim",
+   "cov": [
+    "jabodetabek"
+   ],
+   "loc": "Cakung, Jakarta Timur",
+   "price": null,
+   "ig": "optima_wedding_planner",
+   "src": "Orami, 2024"
+  },
+  {
+   "id": "v-mumtaza",
+   "name": "Mumtaza Wedding Organizer",
+   "cat": "wo",
+   "home": "bogor",
+   "cov": [
+    "jabodetabek"
+   ],
+   "loc": "Ciomas, Kab. Bogor (melayani Jakarta, Depok, Bekasi, Tangerang)",
+   "price": null,
+   "ig": "mumtaza.weddingandcatering",
+   "src": "Orami, 2024"
+  },
+  {
+   "id": "v-shofia",
+   "name": "Shofiaahmad Wedding Organizer",
+   "cat": "wo",
+   "home": "depok",
+   "cov": [
+    "jabodetabek"
+   ],
+   "loc": "Pancoran Mas, Depok",
+   "price": null,
+   "ig": "shofiaahmadwedding.id",
+   "src": "Orami, 2024"
+  },
+  {
+   "id": "v-nusantara",
+   "name": "Nusantara Catering & Wedding Organizer",
+   "cat": "wo",
+   "home": "bekasi",
+   "cov": [
+    "jabodetabek"
+   ],
+   "loc": "Bekasi Selatan",
+   "price": "Mulai Rp75 jt ke atas",
+   "ig": null,
+   "src": "Orami, 2024"
+  },
+  {
+   "id": "v-nendia",
+   "name": "Nendia Primarasa",
+   "cat": "katering",
+   "home": "jaksel",
+   "cov": [
+    "jabodetabek"
+   ],
+   "loc": "Duren Tiga, Pancoran, Jakarta Selatan",
+   "price": "Paket mulai sekitar Rp135 jt untuk 600 tamu (termasuk dekor, gedung, dokumentasi, hiburan, MC)",
+   "ig": null,
+   "src": "Fimela, Mei 2019"
+  },
+  {
+   "id": "v-dtc",
+   "name": "DTC Catering (Dwi Tunggal Citra)",
+   "cat": "katering",
+   "home": "jaksel",
+   "cov": [
+    "jabodetabek"
+   ],
+   "loc": "Jakarta",
+   "price": "Sekitar Rp150 jt untuk 500 undangan (katering saja)",
+   "ig": null,
+   "src": "Fimela, Mei 2019"
+  },
+  {
+   "id": "v-puspa",
+   "name": "Puspa Catering",
+   "cat": "katering",
+   "home": "jaksel",
+   "cov": [
+    "jabodetabek"
+   ],
+   "loc": "Jakarta",
+   "price": "Rp50-100 jt untuk 500 undangan (1.000 porsi), tergantung gedung",
+   "ig": null,
+   "src": "Fimela, Mei 2019"
+  },
+  {
+   "id": "v-alfabet",
+   "name": "Alfabet Catering",
+   "cat": "katering",
+   "home": "jaksel",
+   "cov": [
+    "jabodetabek"
+   ],
+   "loc": "Bekerja sama dengan gedung di Jabodetabek",
+   "price": "Sekitar Rp150 jt untuk 500 undangan (katering saja)",
+   "ig": null,
+   "src": "Fimela, Mei 2019"
+  },
+  {
+   "id": "v-sono",
+   "name": "Sono Kembang",
+   "cat": "katering",
+   "home": "jaksel",
+   "cov": [
+    "jabodetabek",
+    "surabaya",
+    "yogya",
+    "semarang",
+    "malang"
+   ],
+   "loc": "Jabodetabek, Surabaya, Yogyakarta, Semarang, Malang",
+   "price": "Rp85-100 jt untuk 500 porsi; Rp170 jt untuk 1.000 porsi (buffet + gubukan)",
+   "ig": null,
+   "src": "Fimela, Mei 2019"
+  },
+  {
+   "id": "v-omorfia",
+   "name": "Omorfia Studio",
+   "cat": "mua",
+   "home": "yogya",
+   "cov": [
+    "yogya"
+   ],
+   "loc": "Yogyakarta",
+   "price": null,
+   "ig": null,
+   "desc": "Riasan dari bold sampai natural.",
+   "src": "Popbela"
+  },
+  {
+   "id": "v-astrid",
+   "name": "Astrid Anisah",
+   "cat": "mua",
+   "home": "yogya",
+   "cov": [
+    "yogya"
+   ],
+   "loc": "Yogyakarta",
+   "price": null,
+   "ig": null,
+   "desc": "Melayani pengantin, pre-wedding, dan bridesmaid.",
+   "src": "Popbela"
+  },
+  {
+   "id": "v-henny",
+   "name": "Henny Priyatna",
+   "cat": "mua",
+   "home": "yogya",
+   "cov": [
+    "yogya"
+   ],
+   "loc": "Yogyakarta",
+   "price": null,
+   "ig": null,
+   "desc": "Rias pengantin adat berbagai daerah, jasa hijab dan hairdo.",
+   "src": "Popbela"
+  },
+  {
+   "id": "v-kartika",
+   "name": "Kartika MUA",
+   "cat": "mua",
+   "home": "yogya",
+   "cov": [
+    "yogya"
+   ],
+   "loc": "Yogyakarta",
+   "price": "Disebut cukup terjangkau",
+   "ig": null,
+   "desc": "Gaya natural dan soft, tersedia hairstylist dan hijabstylist.",
+   "src": "Popbela"
+  },
+  {
+   "id": "v-adhelia",
+   "name": "Adhelia Makeup",
+   "cat": "mua",
+   "home": "yogya",
+   "cov": [
+    "yogya"
+   ],
+   "loc": "Yogyakarta",
+   "price": null,
+   "ig": null,
+   "desc": "Gaya natural dan flawless.",
+   "src": "Popbela"
+  },
+  {
+   "id": "v-lia",
+   "name": "Lia Pharoh Makeup",
+   "cat": "mua",
+   "home": "yogya",
+   "cov": [
+    "yogya"
+   ],
+   "loc": "Yogyakarta",
+   "price": null,
+   "ig": null,
+   "desc": "Thai makeup look dan rias tradisional Jogja Putri.",
+   "src": "Popbela"
+  },
+  {
+   "id": "v-mayrindra",
+   "name": "Mayrindra MUA",
+   "cat": "mua",
+   "home": "yogya",
+   "cov": [
+    "yogya"
+   ],
+   "loc": "Yogyakarta",
+   "price": null,
+   "ig": null,
+   "desc": "Soft glam yang natural.",
+   "src": "Popbela"
+  },
+  {
+   "id": "v-mamuk",
+   "name": "Mamuk Tukang Makeup Jogja",
+   "cat": "mua",
+   "home": "yogya",
+   "cov": [
+    "yogya"
+   ],
+   "loc": "Yogyakarta",
+   "price": null,
+   "ig": null,
+   "desc": "Spesialis rias pengantin adat Jawa.",
+   "src": "Popbela"
+  },
+  {
+   "id": "v-amry",
+   "name": "Amry Sophia Makeup",
+   "cat": "mua",
+   "home": "yogya",
+   "cov": [
+    "yogya"
+   ],
+   "loc": "Yogyakarta",
+   "price": null,
+   "ig": null,
+   "desc": "Berbagai gaya, termasuk Aceh look dan Thai look.",
+   "src": "Popbela"
+  },
+  {
+   "id": "v-puspita",
+   "name": "Puspita Nia MUA",
+   "cat": "mua",
+   "home": "yogya",
+   "cov": [
+    "yogya"
+   ],
+   "loc": "Yogyakarta",
+   "price": null,
+   "ig": null,
+   "desc": "Timeless, soft glam, classic, dan romantic.",
+   "src": "Popbela"
+  }
+ ]
+}

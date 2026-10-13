@@ -1,0 +1,978 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Cari gedung pernikahan terdekat, vendor, dan hitung anggaran pernikahan.">
+<meta name="theme-color" content="#DDD8F1">
+<style>*{box-sizing:border-box}html{color-scheme:light}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Rencana Nikah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: kolom ponsel dengan tab bar melayang; di layar lebar muncul rel ikon di kiri dan kartu kaca tersusun dua kolom. */
+:root{
+  --bg:#DDD8F1; --glow1:#C7BEF0; --glow2:#F7D9CF; --glow3:#E9E2FA;
+  --glass:rgba(255,255,255,.66); --solid:#F7F5FD; --edge:rgba(255,255,255,.95);
+  --shadow:0 12px 32px rgba(105,92,190,.16);
+  --ink:#24233F; --muted:#76749A; --primary:#6B6DD9; --soft:#E4E1F8; --on-primary:#FFFFFF;
+  --violet-a:#8479DD; --violet-b:#6A5FD0; --navy:#27284B; --on-navy:#FFFFFF;
+  --coral:#E8847F; --peach:#F5C7B4; --good:#2F7D5B; --warn:#A8651F; --line:rgba(110,100,190,.16);
+  --c1:#6B6DD9; --c2:#A79CEA; --c3:#F5C7B4; --c4:#E8847F; --c5:#CFC9EE;
+  --font-d:'Poppins','Trebuchet MS',system-ui,sans-serif;
+  --font-b:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#15132A; --glow1:#2D2766; --glow2:#4A2A45; --glow3:#1F1B45;
+  --glass:rgba(44,40,88,.62); --solid:#241F4A; --edge:rgba(255,255,255,.1);
+  --shadow:0 12px 32px rgba(0,0,0,.35);
+  --ink:#EFECFF; --muted:#ABA7D2; --primary:#9C9EF6; --soft:#3A3578; --on-primary:#17152E;
+  --violet-a:#6D62C8; --violet-b:#4F45A8; --navy:#9C9EF6; --on-navy:#17152E;
+  --coral:#F0948E; --peach:#F5C7B4; --good:#7CC59A; --warn:#E3A964; --line:rgba(180,170,255,.16);
+  --c1:#9C9EF6; --c2:#6D62C8; --c3:#F5C7B4; --c4:#F0948E; --c5:#5A5496; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#15132A; --glow1:#2D2766; --glow2:#4A2A45; --glow3:#1F1B45;
+  --glass:rgba(44,40,88,.62); --solid:#241F4A; --edge:rgba(255,255,255,.1);
+  --shadow:0 12px 32px rgba(0,0,0,.35);
+  --ink:#EFECFF; --muted:#ABA7D2; --primary:#9C9EF6; --soft:#3A3578; --on-primary:#17152E;
+  --violet-a:#6D62C8; --violet-b:#4F45A8; --navy:#9C9EF6; --on-navy:#17152E;
+  --coral:#F0948E; --peach:#F5C7B4; --good:#7CC59A; --warn:#E3A964; --line:rgba(180,170,255,.16);
+  --c1:#9C9EF6; --c2:#6D62C8; --c3:#F5C7B4; --c4:#F0948E; --c5:#5A5496; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{background-color:var(--bg);background-image:radial-gradient(60% 45% at 0% 0%,var(--glow1),transparent 72%),radial-gradient(55% 40% at 100% 28%,var(--glow2),transparent 72%),radial-gradient(60% 40% at 20% 100%,var(--glow3),transparent 72%);background-attachment:fixed;color:var(--ink);font-family:var(--font-b);font-size:14px;line-height:1.5;padding-inline:16px;padding-block:18px 120px;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+input,select{font:inherit;color:inherit}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{font-family:var(--font-d);font-weight:600;text-wrap:balance}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)} .small{font-size:12px} .acc{color:var(--primary)}
+a{color:var(--primary)}
+
+.dots{position:fixed;inset:0;pointer-events:none;z-index:0}
+.dots i{position:absolute;border-radius:50%;background:#fff;opacity:.85}
+.dots i:nth-child(1){left:6%;top:22%;width:14px;height:14px}
+.dots i:nth-child(2){right:9%;top:14%;width:10px;height:10px}
+.dots i:nth-child(3){left:3%;top:64%;width:8px;height:8px}
+.dots i:nth-child(4){right:5%;top:58%;width:16px;height:16px}
+.dots i:nth-child(5){left:46%;top:92%;width:12px;height:12px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .dots i{opacity:.18}}
+:root[data-theme="dark"] .dots i{opacity:.18}
+
+.shell{position:relative;z-index:1;max-width:480px;margin-inline:auto}
+.main{display:flex;flex-direction:column;gap:18px;min-width:0}
+.rail{display:none}
+.g{background:var(--glass);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid var(--edge);border-radius:28px;box-shadow:var(--shadow)}
+.pad{padding:18px}
+
+.topbar{display:flex;gap:12px;align-items:center}
+.spacer{flex:1}
+.pill{flex:1;min-width:0;display:flex;align-items:center;gap:8px;height:48px;padding-inline:16px;border-radius:24px;background:var(--glass);border:1px solid var(--edge);box-shadow:var(--shadow);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);text-align:left;font-weight:500}
+.pill span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.icon-btn{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--glass);border:1px solid var(--edge);box-shadow:var(--shadow);color:var(--ink)}
+.icon-btn.on{background:var(--primary);color:var(--on-primary)}
+.ptitle h1{font-size:26px;line-height:1.2}
+.ptitle p{margin-top:6px;color:var(--muted);font-size:13px}
+
+.welcome,.total{position:relative;overflow:hidden;border-radius:36px;background:linear-gradient(155deg,var(--violet-a),var(--violet-b));color:#fff;box-shadow:0 18px 40px rgba(90,76,200,.28)}
+.welcome{padding:28px 24px 26px;min-height:310px;display:flex}
+.wtxt{position:relative;z-index:2;display:flex;flex-direction:column;align-items:flex-start;gap:14px;max-width:62%}
+.welcome h1{font-size:30px;line-height:1.14;font-weight:700}
+.welcome p{font-size:13px;opacity:.95}
+.wtxt .btn{margin-top:auto}
+.art{position:absolute;right:-10px;bottom:-8px;width:56%;max-width:300px;height:auto;z-index:1}
+.total{padding:22px 22px 24px;min-height:190px}
+.total .art{width:46%;bottom:-6px;right:-6px;max-width:200px}
+.total .lbl{font-size:13px;opacity:.92}
+.total .amt{font-family:var(--font-d);font-weight:700;font-size:38px;line-height:1.15;margin-top:6px}
+.total .rng{font-size:12.5px;opacity:.95;margin-top:6px;max-width:68%}
+.total>div{position:relative;z-index:2}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding-inline:22px;border-radius:23px;background:var(--primary);color:var(--on-primary);font-weight:600;white-space:nowrap}
+.btn.navy{background:var(--navy);color:var(--on-navy);box-shadow:0 8px 18px rgba(39,40,75,.3)}
+.btn.ghost{background:var(--soft);color:var(--primary)}
+.btn.sm{height:34px;padding-inline:14px;font-size:12px;border-radius:17px}
+.btn.wide{width:100%}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+
+.sechead{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.sechead h2{font-size:19px}
+.seg{display:flex;background:var(--soft);border-radius:22px;padding:4px;gap:2px}
+.seg button{flex:1;height:36px;padding-inline:16px;border-radius:18px;font-size:13px;font-weight:500;color:var(--muted);white-space:nowrap}
+.seg button.on{background:var(--primary);color:var(--on-primary)}
+.scrollx{display:flex;gap:8px;overflow-x:auto;margin-inline:-16px;padding-inline:16px;scrollbar-width:none}
+.scrollx::-webkit-scrollbar{display:none}
+.scrollx button{flex:none;height:38px;padding-inline:16px;border-radius:19px;background:var(--glass);border:1px solid var(--edge);font-size:13px;font-weight:500;color:var(--muted)}
+.scrollx button.on{background:var(--primary);color:var(--on-primary);border-color:transparent}
+
+.cols{display:grid;gap:12px;grid-template-columns:1fr}
+.vrow{display:flex;align-items:center;gap:14px;padding:12px 16px 12px 12px;text-align:left;width:100%;min-width:0}
+.av{width:56px;height:56px;border-radius:50%;overflow:hidden;flex:none;display:block}
+.av svg{width:100%;height:100%;display:block}
+.av.ini{display:grid;place-items:center;font-family:var(--font-d);font-weight:600;color:#fff;font-size:16px}
+.vb{flex:1;min-width:0;display:flex;flex-direction:column}
+.vb b{font-family:var(--font-d);font-weight:500;font-size:14.5px;line-height:1.3}
+.vp{text-align:right;display:flex;flex-direction:column;flex:none}
+.vp b{font-family:var(--font-d);font-weight:600;font-size:14.5px;white-space:nowrap}
+.vp small{font-size:11px;color:var(--muted)}
+
+.media{position:relative;border-radius:30px;height:190px;background:linear-gradient(160deg,var(--soft),var(--glass));border:1px solid var(--edge);overflow:hidden;display:grid;place-items:center}
+.media svg.big{width:62%;max-width:300px;height:auto}
+.mbadge{position:absolute;right:16px;bottom:16px;width:48px;height:48px;border-radius:50%;background:var(--solid);color:var(--primary);display:grid;place-items:center;box-shadow:var(--shadow)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tile{padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.tile b{font-family:var(--font-d);font-weight:600;font-size:22px;line-height:1.1}
+.tile small{color:var(--muted);font-size:12px}
+.sq{width:44px;height:44px;border-radius:14px;background:var(--soft);color:var(--primary);display:grid;place-items:center}
+.sq.fill{background:var(--primary);color:var(--on-primary)}
+.sq.fill b{font-size:14px;font-weight:600}
+.inforow{display:flex;align-items:center;gap:12px;padding:10px 16px 10px 10px}
+.inforow .av{width:40px;height:40px}
+.inforow span.t{flex:1;min-width:0;font-weight:500}
+.pkg{padding:16px 18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.pkg.sel{outline:2px solid var(--primary);outline-offset:-2px}
+.pkg .top{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.pkg h3{font-size:15px;font-weight:600}
+.price{font-family:var(--font-d);font-weight:600;color:var(--primary);font-size:17px;white-space:nowrap}
+.note{background:var(--soft);border-radius:20px;padding:14px 16px;font-size:13px}
+.chart{width:100%;height:auto;display:block}
+.empty{text-align:center;padding:26px 8px;color:var(--muted)}
+
+.tag{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:500;border:1px solid var(--primary);color:var(--primary);white-space:nowrap}
+.tag.src{border-color:var(--good);color:var(--good)}
+.tag.est{border-color:var(--warn);color:var(--warn)}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+
+.bgrid{display:grid;gap:18px;grid-template-columns:1fr}
+.col{display:flex;flex-direction:column;gap:18px;min-width:0}
+.prog{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--coral),var(--primary))}
+.pct{font-family:var(--font-d);font-weight:600;font-size:30px;line-height:1.2}
+.tgt{display:flex;align-items:center;gap:8px}
+.tgt .inp{width:110px;height:38px;text-align:right}
+.inp{height:44px;border-radius:14px;border:1px solid var(--line);background:var(--solid);padding-inline:14px;width:100%;min-width:0}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.spills{display:flex;flex-direction:column;gap:10px}
+.spill{display:flex;align-items:center;gap:12px;height:58px;padding-inline:18px;border-radius:29px;color:var(--ink)}
+.spill svg{color:var(--coral)}
+.spill>span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spill b,.spill .pin{font-weight:600;text-align:right}
+.pin{width:92px;height:36px;border:0;background:transparent;font-size:15px;border-radius:10px}
+.pin:focus-visible{background:var(--soft)}
+.bar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--line);gap:2px}
+.bar span{display:block}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;font-size:12px;margin-top:12px}
+.legend span{display:flex;gap:8px;align-items:center;min-width:0}
+.legend i{width:10px;height:10px;border-radius:50%;flex:none}
+.items{display:flex;flex-direction:column}
+.it{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;padding-block:13px;border-top:1px solid var(--line)}
+.it:first-child{border-top:0}
+.it.off{opacity:.45}
+.nm{min-width:0;display:flex;flex-direction:column;gap:4px}
+.am{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.am button{display:block;margin-left:auto;font-size:11px;color:var(--primary);font-weight:500}
+.cb{width:22px;height:22px;border-radius:8px;border:1.5px solid var(--primary);display:grid;place-items:center;color:var(--on-primary);margin-top:1px}
+.cb.on{background:var(--primary)}
+.cb svg{width:14px;height:14px;stroke-width:2.4}
+.edit{display:flex;gap:8px;align-items:center;margin-top:6px}
+.edit .inp{height:36px;width:110px}
+
+.cal{padding:20px 18px}
+.calh{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.calh h2{font-size:22px;font-weight:500}
+.calh .btns{gap:6px;flex-wrap:nowrap}
+.calh .x{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--soft);color:var(--primary)}
+.calg{display:grid;grid-template-columns:repeat(7,1fr);row-gap:4px;text-align:center}
+.calg .wd{font-size:11.5px;color:var(--muted);padding-bottom:8px}
+.calg button,.calg span.e{height:42px;display:grid;place-items:center;position:relative;border-radius:50%;font-variant-numeric:tabular-nums;font-size:14px}
+.calg button.today::after{content:"";position:absolute;bottom:5px;width:4px;height:4px;border-radius:50%;background:var(--coral)}
+.calg button.sel{background:var(--soft);color:var(--primary);font-weight:600;box-shadow:0 0 0 1px var(--line)}
+.week{display:flex;justify-content:space-between;gap:4px;padding:12px 14px}
+.week button{flex:1;height:48px;border-radius:24px;color:var(--muted);font-size:15px;font-variant-numeric:tabular-nums}
+.week button.sel{background:var(--soft);color:var(--ink);font-weight:600}
+.cnt{font-family:var(--font-d);font-weight:700;font-size:34px;line-height:1.1}
+
+.tabbar{position:fixed;left:0;right:0;bottom:0;padding:0 16px calc(12px + env(safe-area-inset-bottom,0px));pointer-events:none;z-index:20}
+.tabbar .in{pointer-events:auto;max-width:448px;margin-inline:auto;height:68px;border-radius:34px;background:var(--glass);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid var(--edge);box-shadow:var(--shadow);display:flex;justify-content:space-around;align-items:center;padding-inline:8px}
+.tab{flex:1;height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--muted);font-size:10.5px;font-weight:500;border-radius:26px}
+.tab svg{width:24px;height:24px}
+.tab.on{color:var(--primary)}
+
+.scrim{position:fixed;inset:0;background:rgba(30,25,70,.45);z-index:40;display:flex;align-items:flex-end;justify-content:center}
+.panel{width:100%;max-width:480px;max-height:86%;overflow-y:auto;background:var(--solid);border-radius:32px 32px 0 0;padding:22px 20px calc(24px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:16px;animation:up .22s ease-out}
+@keyframes up{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.panel{animation:none}}
+.ph{display:flex;justify-content:space-between;align-items:center}
+.ph h2{font-size:19px}
+.x{width:36px;height:36px;border-radius:50%;background:var(--soft);color:var(--primary);display:grid;place-items:center;flex:none}
+.x.on{background:var(--primary);color:var(--on-primary)}
+.opt{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 4px;border-top:1px solid var(--line);text-align:left;width:100%}
+.opt:first-child{border-top:0}
+.opt.on b{color:var(--primary)}
+.src-list{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:12px}
+
+@media (min-width:640px){
+  .cols{grid-template-columns:1fr 1fr}
+  .welcome h1{font-size:36px}
+}
+@media (min-width:900px){
+  body{padding-block:28px 48px}
+  .shell{max-width:1080px;display:grid;grid-template-columns:76px minmax(0,1fr);gap:28px;align-items:start}
+  .rail{display:flex;flex-direction:column;gap:10px;position:sticky;top:28px;padding:12px 10px;border-radius:38px;background:var(--glass);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid var(--edge);box-shadow:var(--shadow)}
+  .rail button{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;color:var(--muted)}
+  .rail button svg{width:24px;height:24px}
+  .rail button.on{background:var(--solid);color:var(--primary);box-shadow:var(--shadow)}
+  .tabbar{display:none}
+  .bgrid{grid-template-columns:1fr 1fr;align-items:start}
+  .welcome{min-height:300px}
+  .scrim{align-items:center}
+  .panel{border-radius:32px;max-width:440px}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="gArch" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EFEAFF"/><stop offset=".5" stop-color="#BDB1F5"/><stop offset="1" stop-color="#7B6BDC"/></linearGradient>
+    <linearGradient id="gRing1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE3D3"/><stop offset="1" stop-color="#F08F86"/></linearGradient>
+    <linearGradient id="gRing2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F4F0FF"/><stop offset="1" stop-color="#9E92EE"/></linearGradient>
+    <radialGradient id="gSph" cx=".32" cy=".28" r=".85"><stop offset="0" stop-color="#F2EEFF"/><stop offset=".5" stop-color="#9A8DEA"/><stop offset="1" stop-color="#4B3FAE"/></radialGradient>
+    <radialGradient id="gSphP" cx=".32" cy=".28" r=".85"><stop offset="0" stop-color="#FFF1E8"/><stop offset=".55" stop-color="#F4B8A4"/><stop offset="1" stop-color="#D9776F"/></radialGradient>
+    <linearGradient id="gHeart" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB8AE"/><stop offset="1" stop-color="#E4706F"/></linearGradient>
+    <linearGradient id="gBarA" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E7E1FF"/><stop offset="1" stop-color="#B7AAF2"/></linearGradient>
+    <linearGradient id="gBarB" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFD9C6"/><stop offset="1" stop-color="#F29C8C"/></linearGradient>
+    <linearGradient id="gBarC" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#CFC6FF"/><stop offset="1" stop-color="#8576E6"/></linearGradient>
+    <linearGradient id="gLine" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E8847F"/><stop offset="1" stop-color="#6B6DD9"/></linearGradient>
+    <linearGradient id="gArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8F84E8" stop-opacity=".35"/><stop offset="1" stop-color="#8F84E8" stop-opacity="0"/></linearGradient>
+  </defs>
+</svg>
+
+<div class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+<div id="app"></div>
+
+<script>
+"use strict";
+/* ============ DATA ============ */
+var YEAR = (function(){var d=new Date();return d.getFullYear()+d.getMonth()/12;})();
+var GOLD_AS_OF = "27 September 2026";
+var M = 1e6;
+
+/* lvl = faktor tingkat harga kota (estimasi, Jakarta = 1,00) */
+var AREAS = [
+  {id:"jaksel",name:"Jakarta Selatan",lat:-6.2615,lng:106.8106,lvl:1.0,grp:"jabodetabek"},
+  {id:"jakpus",name:"Jakarta Pusat",lat:-6.1865,lng:106.834,lvl:1.0,grp:"jabodetabek"},
+  {id:"jakbar",name:"Jakarta Barat",lat:-6.168,lng:106.764,lvl:1.0,grp:"jabodetabek"},
+  {id:"jaktim",name:"Jakarta Timur",lat:-6.225,lng:106.9,lvl:0.95,grp:"jabodetabek"},
+  {id:"jakut",name:"Jakarta Utara",lat:-6.138,lng:106.863,lvl:1.0,grp:"jabodetabek"},
+  {id:"bsd",name:"BSD City, Tangerang Selatan",lat:-6.301,lng:106.653,lvl:1.0,grp:"jabodetabek"},
+  {id:"serpong",name:"Serpong, Tangerang",lat:-6.24,lng:106.63,lvl:1.0,grp:"jabodetabek"},
+  {id:"alsut",name:"Alam Sutera, Tangerang",lat:-6.225,lng:106.65,lvl:1.0,grp:"jabodetabek"},
+  {id:"ciputat",name:"Ciputat, Tangerang Selatan",lat:-6.31,lng:106.75,lvl:0.92,grp:"jabodetabek"},
+  {id:"bintaro",name:"Bintaro, Tangerang Selatan",lat:-6.28,lng:106.715,lvl:0.98,grp:"jabodetabek"},
+  {id:"tangkota",name:"Kota Tangerang",lat:-6.1783,lng:106.6319,lvl:0.92,grp:"jabodetabek"},
+  {id:"bekasi",name:"Bekasi",lat:-6.2383,lng:106.9756,lvl:0.9,grp:"jabodetabek"},
+  {id:"depok",name:"Depok",lat:-6.4025,lng:106.7942,lvl:0.88,grp:"jabodetabek"},
+  {id:"bogor",name:"Bogor",lat:-6.595,lng:106.806,lvl:0.85,grp:"jabodetabek"},
+  {id:"bandung",name:"Bandung",lat:-6.9175,lng:107.6191,lvl:0.9,grp:"bandung"},
+  {id:"semarang",name:"Semarang",lat:-6.9667,lng:110.4167,lvl:0.8,grp:"semarang"},
+  {id:"yogya",name:"Yogyakarta",lat:-7.7956,lng:110.3695,lvl:0.78,grp:"yogya"},
+  {id:"solo",name:"Solo",lat:-7.5755,lng:110.8243,lvl:0.72,grp:"solo"},
+  {id:"surabaya",name:"Surabaya",lat:-7.2575,lng:112.7521,lvl:0.92,grp:"surabaya"},
+  {id:"malang",name:"Malang",lat:-7.9666,lng:112.6326,lvl:0.78,grp:"malang"},
+  {id:"denpasar",name:"Denpasar, Bali",lat:-8.65,lng:115.2167,lvl:1.15,grp:"bali"},
+  {id:"medan",name:"Medan",lat:3.5952,lng:98.6722,lvl:0.88,grp:"medan"},
+  {id:"makassar",name:"Makassar",lat:-5.1477,lng:119.4327,lvl:0.88,grp:"makassar"}
+];
+
+/* year = tahun harga referensi. unit sewa = tarif tetap, pax = per tamu. cat = apakah katering termasuk */
+var VENUES = [
+  {id:"arsip",name:"Gedung Arsip Nasional",area:"jakbar",addr:"Jl. Gajah Mada No. 111, Taman Sari, Jakarta Barat",lat:-6.1486,lng:106.8165,cap:1500,kind:"Sewa gedung",cat:"tidak",year:2020,phone:"021 6347744",src:"Cermati, Mar 2020",pkgs:[{n:"Sewa 6 jam",p:30*M,unit:"sewa"}]},
+  {id:"lemhannas",name:"Gedung Panca Gatra Lemhannas RI",area:"jakpus",addr:"Jl. Kebon Siri No. 24-28, Gambir, Jakarta Pusat",lat:-6.185,lng:106.83,cap:1500,kind:"Sewa gedung",cat:"tidak",year:2020,phone:"0856 9205 0150",src:"Cermati, Mar 2020",pkgs:[{n:"Sewa siang",p:22*M,unit:"sewa"},{n:"Sewa malam",p:23*M,unit:"sewa"}]},
+  {id:"marinir",name:"Graha Marinir Panti Perwira",area:"jakpus",addr:"Jl. Prajurit KKO Usman dan Harun No. 40, Kwitang, Jakarta Pusat",lat:-6.179,lng:106.837,cap:1200,kind:"Sewa gedung",cat:"tidak",year:2020,phone:null,src:"Cermati, Mar 2020",pkgs:[{n:"Sewa gedung",p:20*M,unit:"sewa"}]},
+  {id:"kriya",name:"Rumah Kriya Asri",area:"jaksel",addr:"Jl. Ampera Raya No. 1000, Cilandak Timur, Jakarta Selatan",lat:-6.292,lng:106.804,cap:null,kind:"Sewa gedung",cat:"tidak",year:2020,phone:null,src:"Cermati, Mar 2020",pkgs:[{n:"Senin-Kamis",p:17.5*M,unit:"sewa"},{n:"Jumat-Minggu",p:20*M,unit:"sewa"}]},
+  {id:"ap1",name:"Graha Angkasa Pura 1",area:"jakpus",addr:"Jl. Merpati 3 Blok B Kav 2, Kemayoran, Jakarta",lat:-6.161,lng:106.842,cap:1000,kind:"Sewa gedung",cat:"tidak",year:2020,phone:"021 6541961",src:"Cermati, Mar 2020",pkgs:[{n:"Senin-Kamis, siang",p:13.5*M,unit:"sewa"},{n:"Senin-Kamis, malam",p:15*M,unit:"sewa"},{n:"Sabtu-Minggu, siang",p:15*M,unit:"sewa"},{n:"Sabtu-Minggu, malam",p:16.5*M,unit:"sewa"}],extra:"Akad nikah menambah sekitar Rp2 jt."},
+  {id:"aldevco",name:"Aldevco Octagon",area:"jaksel",addr:"Jl. Warung Buncit Raya No. 75, Kalibata, Jakarta Selatan",lat:-6.256,lng:106.839,cap:800,kind:"Sewa gedung",cat:"tidak",year:2020,phone:"021 7974774",src:"Cermati, Mar 2020",pkgs:[{n:"Siang (kapasitas 600)",p:10.5*M,unit:"sewa"},{n:"Malam (kapasitas 800)",p:14*M,unit:"sewa"}]},
+  {id:"makarti",name:"Balai Makarti Muktitama",area:"jaksel",addr:"Jl. TMP Kalibata No. 17, Pancoran, Jakarta Selatan",lat:-6.257,lng:106.85,cap:800,kind:"Sewa gedung",cat:"tidak",year:2020,phone:"021 7993376",src:"Cermati, Mar 2020",pkgs:[{n:"Sewa gedung",p:10*M,unit:"sewa"}]},
+  {id:"puspa",name:"Puspa Pesona Taman Anggrek",area:"jaktim",addr:"Jl. Pinang Ranti Timur, Taman Mini, Jakarta Timur",lat:-6.303,lng:106.895,cap:100,kind:"Sewa gedung",cat:"tidak",year:2020,phone:"0812 9600 940",src:"Cermati, Mar 2020",pkgs:[{n:"Siang (standing party)",p:10*M,unit:"sewa"},{n:"Malam",p:11*M,unit:"sewa"}],extra:"Akad nikah menambah sekitar Rp2 jt."},
+  {id:"azila",name:"Azila Villa",area:"jaktim",addr:"Jl. Damai PBSI No. 2A, Cipayung, Jakarta Timur",lat:-6.327,lng:106.9,cap:400,kind:"Sewa gedung",cat:"tidak",year:2020,phone:null,src:"Cermati, Mar 2020",pkgs:[{n:"Resepsi, setengah area",p:9.5*M,unit:"sewa"},{n:"Resepsi, area penuh",p:12*M,unit:"sewa"}]},
+  {id:"bandar",name:"Bandar Djakarta Alam Sutera",area:"alsut",addr:"Alam Sutera, Tangerang",lat:-6.226,lng:106.656,cap:null,kind:"Paket gedung",cat:"cek",year:2019,phone:"021 5314 0388",src:"Popbela, Mei 2019",pkgs:[{n:"Paket Meneer (min. 300 orang)",p:42*M,unit:"sewa"},{n:"Paket Nyai (min. 500 orang)",p:80*M,unit:"sewa"}]},
+  {id:"radiant",name:"The Radiant Center",area:"ciputat",addr:"Ciputat, Tangerang Selatan",lat:-6.31,lng:106.755,cap:750,kind:"Paket gedung",cat:"cek",year:2019,phone:"0858 9617 2825",src:"Popbela, Mei 2019",pkgs:[{n:"Paket 350 orang",p:79.6*M,unit:"sewa"},{n:"Paket 500 orang",p:93*M,unit:"sewa"},{n:"Paket 750 orang",p:107.6*M,unit:"sewa"}]},
+  {id:"springs",name:"Royal Ballroom The Springs Club",area:"serpong",addr:"Summarecon Serpong, Tangerang",lat:-6.237,lng:106.629,cap:400,kind:"Paket gedung",cat:"cek",year:2019,phone:"021 2917 1515",src:"Popbela, Mei 2019",pkgs:[{n:"Paket Crystal (400 tamu)",p:248.8*M,unit:"sewa"}]},
+  {id:"ice",name:"ICE BSD",area:"bsd",addr:"BSD City, Tangerang Selatan",lat:-6.3017,lng:106.6416,cap:10000,kind:"Paket per tamu",cat:"ya",year:2019,phone:"021 2971 4600",src:"Popbela, Mei 2019",pkgs:[{n:"Lily 1 (min. 400 tamu)",p:335e3,min:400,unit:"pax"},{n:"Lily 2 (min. 600 tamu)",p:347e3,min:600,unit:"pax"},{n:"Lavender (min. 1.000 tamu)",p:650e3,min:1000,unit:"pax"}]},
+  {id:"chakra",name:"Chakra Wedding Hall",area:"bsd",addr:"BSD City, Tangerang Selatan",lat:-6.3,lng:106.662,cap:400,kind:"Paket gedung",cat:"cek",year:2019,phone:"0878 5356 5002",src:"Popbela, Mei 2019",pkgs:[{n:"Chakra (200 orang)",p:120*M,unit:"sewa"},{n:"Amaryllis (400 orang)",p:145*M,unit:"sewa"},{n:"Bluebells",p:175*M,unit:"sewa"}]},
+  {id:"santika",name:"Hotel Santika Premiere Bintaro",area:"bintaro",addr:"Bintaro, Pondok Aren, Tangerang Selatan",lat:-6.279,lng:106.72,cap:600,kind:"Paket hotel",cat:"cek",year:2019,phone:"0812 1092 8056",src:"Popbela, Mei 2019",pkgs:[{n:"Silver (400 tamu)",p:140*M,unit:"sewa"},{n:"Gold (500 tamu)",p:175*M,unit:"sewa"},{n:"Platinum (600 tamu)",p:225*M,unit:"sewa"}]},
+  {id:"sabuga",name:"Sasana Budaya Ganesha (Sabuga)",area:"bandung",addr:"Jl. Tamansari No. 73, Bandung",lat:-6.8933,lng:107.6103,cap:null,kind:"Sewa gedung",cat:"cek",year:null,phone:null,src:"Belum ada harga di data",pkgs:[]},
+  {id:"tentrem",name:"Hotel Tentrem Yogyakarta",area:"yogya",addr:"Jl. P. Mangkubumi No. 72A, Yogyakarta",lat:-7.7806,lng:110.3668,cap:null,kind:"Paket hotel",cat:"cek",year:null,phone:null,src:"Belum ada harga di data",pkgs:[]},
+  {id:"ambarrukmo",name:"Royal Ambarrukmo Yogyakarta",area:"yogya",addr:"Jl. Laksda Adisucipto No. 81, Yogyakarta",lat:-7.7835,lng:110.4012,cap:null,kind:"Paket hotel",cat:"cek",year:null,phone:null,src:"Belum ada harga di data",pkgs:[]},
+  {id:"majapahit",name:"Hotel Majapahit Surabaya",area:"surabaya",addr:"Jl. Tunjungan No. 65, Surabaya",lat:-7.2617,lng:112.7385,cap:null,kind:"Paket hotel",cat:"cek",year:null,phone:null,src:"Belum ada harga di data",pkgs:[]}
+];
+
+var VENDORS = [
+  {id:"v-bantu",name:"Bantu Manten",cat:"wo",home:"jaksel",cov:["jabodetabek"],loc:"Jagakarsa, Jakarta Selatan",price:"Mulai sekitar Rp50 jt",ig:"bantumanten",src:"Orami, 2024"},
+  {id:"v-artea",name:"Artea Event Organizer",cat:"wo",home:"jaksel",cov:["jabodetabek"],loc:"Kebayoran Lama, Jakarta Selatan",price:null,ig:"arteaorganizer",src:"Orami, 2024"},
+  {id:"v-topfusion",name:"Top Fusion Corporate",cat:"wo",home:"jaksel",cov:["jabodetabek"],loc:"Cilandak, Jakarta Selatan",price:"Puluhan hingga ratusan juta",ig:null,src:"Orami, 2024"},
+  {id:"v-leblanc",name:"Le Blanc Wedding Planner & Organizer",cat:"wo",home:"jaksel",cov:["jabodetabek"],loc:"Kebayoran Baru, Jakarta Selatan",price:"Menyesuaikan anggaran pasangan",ig:"leblanc_wo",src:"Orami, 2024"},
+  {id:"v-sinambi",name:"Sinambi Wedding",cat:"wo",home:"jaktim",cov:["jabodetabek"],loc:"Jatinegara, Jakarta Timur",price:null,ig:null,web:"sinambi.com/wedding",src:"Orami, 2024"},
+  {id:"v-mke",name:"MKE Wedding Organizer",cat:"wo",home:"jakut",cov:["jabodetabek"],loc:"Jakarta Utara",price:null,ig:"multikreasienterprise",src:"Orami, 2024"},
+  {id:"v-optima",name:"Optima Wedding Planner",cat:"wo",home:"jaktim",cov:["jabodetabek"],loc:"Cakung, Jakarta Timur",price:null,ig:"optima_wedding_planner",src:"Orami, 2024"},
+  {id:"v-mumtaza",name:"Mumtaza Wedding Organizer",cat:"wo",home:"bogor",cov:["jabodetabek"],loc:"Ciomas, Kab. Bogor (melayani Jakarta, Depok, Bekasi, Tangerang)",price:null,ig:"mumtaza.weddingandcatering",src:"Orami, 2024"},
+  {id:"v-shofia",name:"Shofiaahmad Wedding Organizer",cat:"wo",home:"depok",cov:["jabodetabek"],loc:"Pancoran Mas, Depok",price:null,ig:"shofiaahmadwedding.id",src:"Orami, 2024"},
+  {id:"v-nusantara",name:"Nusantara Catering & Wedding Organizer",cat:"wo",home:"bekasi",cov:["jabodetabek"],loc:"Bekasi Selatan",price:"Mulai Rp75 jt ke atas",ig:null,src:"Orami, 2024"},
+  {id:"v-nendia",name:"Nendia Primarasa",cat:"katering",home:"jaksel",cov:["jabodetabek"],loc:"Duren Tiga, Pancoran, Jakarta Selatan",price:"Paket mulai sekitar Rp135 jt untuk 600 tamu (termasuk dekor, gedung, dokumentasi, hiburan, MC)",ig:null,src:"Fimela, Mei 2019"},
+  {id:"v-dtc",name:"DTC Catering (Dwi Tunggal Citra)",cat:"katering",home:"jaksel",cov:["jabodetabek"],loc:"Jakarta",price:"Sekitar Rp150 jt untuk 500 undangan (katering saja)",ig:null,src:"Fimela, Mei 2019"},
+  {id:"v-puspa",name:"Puspa Catering",cat:"katering",home:"jaksel",cov:["jabodetabek"],loc:"Jakarta",price:"Rp50-100 jt untuk 500 undangan (1.000 porsi), tergantung gedung",ig:null,src:"Fimela, Mei 2019"},
+  {id:"v-alfabet",name:"Alfabet Catering",cat:"katering",home:"jaksel",cov:["jabodetabek"],loc:"Bekerja sama dengan gedung di Jabodetabek",price:"Sekitar Rp150 jt untuk 500 undangan (katering saja)",ig:null,src:"Fimela, Mei 2019"},
+  {id:"v-sono",name:"Sono Kembang",cat:"katering",home:"jaksel",cov:["jabodetabek","surabaya","yogya","semarang","malang"],loc:"Jabodetabek, Surabaya, Yogyakarta, Semarang, Malang",price:"Rp85-100 jt untuk 500 porsi; Rp170 jt untuk 1.000 porsi (buffet + gubukan)",ig:null,src:"Fimela, Mei 2019"},
+  {id:"v-omorfia",name:"Omorfia Studio",cat:"mua",home:"yogya",cov:["yogya"],loc:"Yogyakarta",price:null,ig:null,desc:"Riasan dari bold sampai natural.",src:"Popbela"},
+  {id:"v-astrid",name:"Astrid Anisah",cat:"mua",home:"yogya",cov:["yogya"],loc:"Yogyakarta",price:null,ig:null,desc:"Melayani pengantin, pre-wedding, dan bridesmaid.",src:"Popbela"},
+  {id:"v-henny",name:"Henny Priyatna",cat:"mua",home:"yogya",cov:["yogya"],loc:"Yogyakarta",price:null,ig:null,desc:"Rias pengantin adat berbagai daerah, jasa hijab dan hairdo.",src:"Popbela"},
+  {id:"v-kartika",name:"Kartika MUA",cat:"mua",home:"yogya",cov:["yogya"],loc:"Yogyakarta",price:"Disebut cukup terjangkau",ig:null,desc:"Gaya natural dan soft, tersedia hairstylist dan hijabstylist.",src:"Popbela"},
+  {id:"v-adhelia",name:"Adhelia Makeup",cat:"mua",home:"yogya",cov:["yogya"],loc:"Yogyakarta",price:null,ig:null,desc:"Gaya natural dan flawless.",src:"Popbela"},
+  {id:"v-lia",name:"Lia Pharoh Makeup",cat:"mua",home:"yogya",cov:["yogya"],loc:"Yogyakarta",price:null,ig:null,desc:"Thai makeup look dan rias tradisional Jogja Putri.",src:"Popbela"},
+  {id:"v-mayrindra",name:"Mayrindra MUA",cat:"mua",home:"yogya",cov:["yogya"],loc:"Yogyakarta",price:null,ig:null,desc:"Soft glam yang natural.",src:"Popbela"},
+  {id:"v-mamuk",name:"Mamuk Tukang Makeup Jogja",cat:"mua",home:"yogya",cov:["yogya"],loc:"Yogyakarta",price:null,ig:null,desc:"Spesialis rias pengantin adat Jawa.",src:"Popbela"},
+  {id:"v-amry",name:"Amry Sophia Makeup",cat:"mua",home:"yogya",cov:["yogya"],loc:"Yogyakarta",price:null,ig:null,desc:"Berbagai gaya, termasuk Aceh look dan Thai look.",src:"Popbela"},
+  {id:"v-puspita",name:"Puspita Nia MUA",cat:"mua",home:"yogya",cov:["yogya"],loc:"Yogyakarta",price:null,ig:null,desc:"Timeless, soft glam, classic, dan romantic.",src:"Popbela"}
+];
+
+var VCATS = [
+  {id:"wo",label:"EO / WO",item:"wo"},{id:"katering",label:"Katering",item:"katering"},{id:"mua",label:"MUA",item:"mua"},
+  {id:"orgen",label:"Orgen tunggal",item:"orgen"},{id:"seragam",label:"Seragam",item:"seragam"},
+  {id:"dok",label:"Foto & video",item:"dok"},{id:"emas",label:"Cincin & mahar",item:null}
+];
+
+var ITEMS = [
+  {id:"gedung",label:"Gedung / venue",g:0,basis:"sumber",unit:"flat",r:{hemat:[12*M,35*M],standar:[40*M,110*M],premium:[140*M,340*M]},hint:"Pilih gedung di tab Gedung untuk angka spesifik."},
+  {id:"katering",label:"Katering",g:0,basis:"sumber",unit:"pax",r:{hemat:[45e3,80e3],standar:[85e3,140e3],premium:[150e3,260e3]},hint:"Harga per porsi dikali jumlah tamu."},
+  {id:"dekor",label:"Dekorasi & pelaminan",g:0,basis:"estimasi",unit:"flat",r:{hemat:[8*M,20*M],standar:[25*M,70*M],premium:[90*M,300*M]},hint:"Pelaminan, bunga, dan penataan ruang."},
+  {id:"wo",label:"Wedding organizer / EO",g:1,basis:"sumber",unit:"flat",r:{hemat:[5*M,15*M],standar:[25*M,60*M],premium:[75*M,250*M]},hint:"Hemat berarti koordinator hari-H saja. Paket penuh mulai sekitar Rp50-75 jt."},
+  {id:"orgen",label:"Hiburan: orgen tunggal / band",g:1,basis:"estimasi",unit:"flat",r:{hemat:[1.5*M,3.5*M],standar:[3.5*M,8*M],premium:[12*M,40*M]},hint:"Hemat orgen tunggal, standar orgen + vokalis + sound, premium band."},
+  {id:"dok",label:"Foto & video",g:1,basis:"estimasi",unit:"flat",r:{hemat:[4*M,9*M],standar:[10*M,25*M],premium:[30*M,90*M]},hint:"Akad dan resepsi."},
+  {id:"mua",label:"MUA & hairdo (akad + resepsi)",g:2,basis:"estimasi",unit:"flat",r:{hemat:[4*M,8*M],standar:[8*M,18*M],premium:[20*M,60*M]},hint:"Termasuk hijab / hairdo untuk dua acara."},
+  {id:"busana",label:"Busana pengantin",g:2,basis:"estimasi",unit:"flat",r:{hemat:[5*M,12*M],standar:[12*M,30*M],premium:[35*M,120*M]},hint:"Sewa atau jahit untuk akad dan resepsi."},
+  {id:"seragam",label:"Seragam keluarga",g:2,basis:"estimasi",unit:"qty",r:{hemat:[200e3,350e3],standar:[350e3,600e3],premium:[650e3,1.2*M]},hint:"Harga per set (bahan + jahit) dikali jumlah seragam."},
+  {id:"lamaran",label:"Tunangan / lamaran & seserahan",g:4,basis:"estimasi",unit:"flat",r:{hemat:[6*M,18*M],standar:[20*M,50*M],premium:[60*M,150*M]},hint:"Acara, konsumsi, dan seserahan."},
+  {id:"undangan",label:"Undangan & souvenir",g:4,basis:"estimasi",unit:"pax",r:{hemat:[3e3,8e3],standar:[8e3,18e3],premium:[20e3,45e3]},hint:"Per tamu."},
+  {id:"cincin",label:"Cincin kawin",g:3,basis:"emas",unit:"gold",hint:"Dihitung dari berat emas, kadar, dan ongkos pembuatan."},
+  {id:"mahar",label:"Mas kawin",g:3,basis:"emas",unit:"gold",hint:"Emas 24K dengan harga Antam, ditambah seperangkat alat salat."},
+  {id:"nikah",label:"Pencatatan nikah",g:4,basis:"sumber",unit:"fixed",hint:"Di KUA pada jam kerja gratis. Di luar KUA atau luar jam kerja Rp600.000 (PNBP)."}
+];
+var GROUPS = [{n:"Gedung & katering",c:"--c1"},{n:"Hiburan & dokumentasi",c:"--c2"},{n:"Rias & busana",c:"--c3"},{n:"Emas & mahar",c:"--c4"},{n:"Lamaran & lainnya",c:"--c5"}];
+
+var SOURCES = [
+  ["Harga emas Antam, diperbarui otomatis tiap bulan (logammulia.com)","https://www.logammulia.com/id/harga-emas-hari-ini"],
+  ["Data venue tambahan: OpenStreetMap","https://www.openstreetmap.org/"],
+  ["Harga emas Antam 27 Sep 2026 (Bisnis.com)","https://market.bisnis.com/read/20260927/235/2007504/harga-emas-antam-di-pegadaian-hari-ini-minggu-27-september-2026"],
+  ["Gedung pernikahan Tangerang (Popbela, 2019)","https://www.popbela.com/relationship/married/harga-sewa-gedung-pernikahan-di-tangerang-00-vqczp-vb7wvz"],
+  ["Gedung pernikahan Jakarta di bawah Rp30 jt (Cermati, 2020)","https://www.cermati.com/artikel/dibawah-rp30-juta-ini-rekomendasi-gedung-pernikahan-di-jakarta"],
+  ["Cara hitung biaya katering (Antara)","https://www.antaranews.com/berita/4224291/cara-hitung-biaya-katering-resepsi-pernikahan"],
+  ["Katering pernikahan Jakarta (Fimela, 2019)","https://www.fimela.com/lifestyle/read/3959525/5-rekomendasi-catering-pernikahan-di-jakarta"],
+  ["Wedding organizer (Orami)","https://www.orami.co.id/magazine/rekomendasi-wedding-organizer"],
+  ["MUA di Jogja (Popbela)","https://www.popbela.com/relationship/married/rekomendasi-mua-di-jogja-n3v01-00-m97rq-m5wzwl"],
+  ["Kisaran total biaya nikah 2026 (Popbela)","https://www.popbela.com/relationship/married/budget-nikah-di-indonesia-2026-n3v01-00-fzpls-k2mq07"]
+];
+
+/* ============ STATE ============ */
+var KEY = "rencana-nikah.v1";
+var DEF = {area:"bsd",tab:"gedung",f:{guests:0,max:0,type:"semua",sort:"dekat"},
+  b:{target:500000000,pax:500,tier:"standar",qty:40,on:{},over:{},gold:2653000,ringG:4,ringK:18,ringExtra:0,mahrG:10,alat:true,nikah:"kua",venue:null,cateringIncl:false},
+  favs:[],date:"",vcat:"wo"};
+var S = load();
+var UI = {sheet:null,detail:null,editing:null,scroll:0,q:""};
+
+function load(){
+  var s = JSON.parse(JSON.stringify(DEF));
+  try{
+    var raw = localStorage.getItem(KEY);
+    if(raw){var o = JSON.parse(raw);
+      for(var k in o){ if(k==="f"||k==="b"){ for(var j in o[k]) s[k][j]=o[k][j]; } else s[k]=o[k]; }
+    }
+  }catch(e){}
+  if(!area(s.area)) s.area = DEF.area;
+  return s;
+}
+function save(){ try{localStorage.setItem(KEY, JSON.stringify(S));}catch(e){} }
+
+/* ============ HELPERS ============ */
+function $(s){return document.querySelector(s);}
+function esc(t){return String(t==null?"":t).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function area(id){for(var i=0;i<AREAS.length;i++) if(AREAS[i].id===id) return AREAS[i]; return null;}
+function venue(id){for(var i=0;i<VENUES.length;i++) if(VENUES[i].id===id) return VENUES[i]; return null;}
+function infl(y){return Math.pow(1.045, YEAR-y);}
+function rpFull(n){return "Rp"+Math.round(n).toLocaleString("id-ID");}
+function jt(n){
+  var m = n/1e6;
+  if(m>=1000) return "Rp"+(m/1000).toLocaleString("id-ID",{maximumFractionDigits:2})+" M";
+  if(m>=1) return "Rp"+m.toLocaleString("id-ID",{maximumFractionDigits:m<10?1:0})+" jt";
+  return rpFull(n);
+}
+function km(a,b,c,d){
+  var R=6371, rad=Math.PI/180, dLa=(c-a)*rad, dLo=(d-b)*rad;
+  var x=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(a*rad)*Math.cos(c*rad)*Math.sin(dLo/2)*Math.sin(dLo/2);
+  return 2*R*Math.asin(Math.sqrt(x));
+}
+function dist(v){var A=area(S.area); return km(A.lat,A.lng,v.lat,v.lng);}
+function fmtKm(d){return d<10?d.toFixed(1).replace(".",",")+" km":Math.round(d).toLocaleString("id-ID")+" km";}
+function pkgEst(v,p,pax){
+  var base = p.unit==="pax" ? p.p*Math.max(pax,p.min||0) : p.p;
+  return base*infl(v.year);
+}
+function lowest(v,pax){
+  if(!v.pkgs.length) return null;
+  var m=Infinity; v.pkgs.forEach(function(p){var e=pkgEst(v,p,pax); if(e<m) m=e;});
+  return m;
+}
+/* ============ BUDGET ENGINE ============ */
+function calc(){
+  var b=S.b, A=area(S.area), f=A.lvl, tier=b.tier, rows=[], vc=null;
+  if(b.venue){
+    var v=venue(b.venue.id), p=v&&v.pkgs[b.venue.pi];
+    if(v&&p) vc={v:v,p:p,est:pkgEst(v,p,b.pax)};
+  }
+  var cIncl = !!vc && (vc.p.unit==="pax" || b.cateringIncl);
+  var sub=[0,0,0,0,0];
+  ITEMS.forEach(function(it){
+    var lo=0, hi=0, note=it.hint, auto=false;
+    if(it.id==="gedung" && vc){ lo=vc.est*0.92; hi=vc.est*1.12; note=vc.v.name+" · "+vc.p.n; auto=true; }
+    else if(it.id==="katering" && cIncl){ lo=0; hi=0; note="Sudah termasuk paket gedung"; auto=true; }
+    else if(it.unit==="flat"||it.unit==="pax"||it.unit==="qty"){
+      var m = it.unit==="pax"?b.pax : it.unit==="qty"?b.qty : 1;
+      lo=it.r[tier][0]*f*m; hi=it.r[tier][1]*f*m;
+    } else if(it.id==="cincin"){
+      var pg=b.gold*(b.ringK/24), v1=b.ringG*pg*1.12+Number(b.ringExtra||0);
+      lo=hi=v1; note=b.ringG+" g, emas "+b.ringK+"K + ongkos 12%";
+    } else if(it.id==="mahar"){
+      var mg=b.mahrG*b.gold;
+      lo=mg+(b.alat?1.5*M:0); hi=mg+(b.alat?3*M:0); note=b.mahrG+" g emas 24K"+(b.alat?" + alat salat":"");
+    } else if(it.id==="nikah"){
+      lo=hi=(b.nikah==="kua"?0:600000); note=b.nikah==="kua"?"Di KUA, jam kerja":"Di luar KUA / luar jam kerja";
+    }
+    var on = b.on[it.id]!==false, ov = b.over[it.id];
+    if(ov!=null && ov!==""){ lo=hi=Number(ov); }
+    rows.push({it:it,lo:lo,hi:hi,on:on,note:note,auto:auto,ov:(ov!=null&&ov!=="")});
+    if(on){ sub[it.g]+=(lo+hi)/2; }
+  });
+  var tl=0, th=0;
+  rows.forEach(function(r){ if(r.on){tl+=r.lo; th+=r.hi;} });
+  var cad = S.b.on.cadangan!==false;
+  var cl=cad?tl*0.1:0, ch=cad?th*0.1:0;
+  return {rows:rows,vc:vc,cIncl:cIncl,low:tl+cl,high:th+ch,mid:(tl+th)/2+(cl+ch)/2,cad:{lo:cl,hi:ch,on:cad},sub:sub,sum:(tl+th)/2};
+}
+
+
+/* ============ ICONS & ART ============ */
+function ic(n){
+  var P={
+    pin:'<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0113 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
+    filter:'<path d="M4 7h16M7 12h10M10 17h4"/>',
+    back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',
+    users:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c.6-3.4 3-5.2 6-5.2s5.4 1.8 6 5.2"/><path d="M16 5.2a3 3 0 010 5.6M18 15.2c1.6.7 2.7 2.2 3 4.8"/>',
+    bld:'<path d="M4 20V9l8-5 8 5v11M9 20v-5h6v5M4 20h16"/>',
+    pie:'<path d="M12 3a9 9 0 109 9h-9z"/><path d="M15 3.4A9 9 0 0120.6 9H15z"/>',
+    mark:'<path d="M7 4h10v16l-5-3.5L7 20z"/>',
+    chev:'<path d="M6 9l6 6 6-6"/>',
+    chevL:'<path d="M15 6l-6 6 6 6"/>',
+    chevR:'<path d="M9 6l6 6-6 6"/>',
+    check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+    x:'<path d="M6 6l12 12M18 6L6 18"/>',
+    tag:'<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1"/>',
+    phone:'<path d="M6 3h4l2 5-2.5 1.5a11 11 0 005 5L16 12l5 2v4a2 2 0 01-2 2A16 16 0 013 5a2 2 0 013-2z"/>',
+    cal:'<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/>',
+    shirt:'<path d="M8 4L3 7l2 4 3-1v10h8V10l3 1 2-4-5-3a4 4 0 01-8 0z"/>',
+    list:'<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8 9h8M8 13h8M8 17h4"/>',
+    target:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/>'
+  };
+  return '<svg class="i" viewBox="0 0 24 24" aria-hidden="true">'+P[n]+'</svg>';
+}
+/* gerbang pelaminan + sepasang cincin + bola 3D */
+function heroArt(){
+  return '<svg class="art" viewBox="0 0 260 240" aria-hidden="true">'
+  +'<ellipse cx="130" cy="226" rx="104" ry="9" fill="#2A1F7A" opacity=".18"/>'
+  +'<path d="M62 222V108a68 68 0 01136 0v114" fill="none" stroke="url(#gArch)" stroke-width="22" stroke-linecap="round"/>'
+  +'<path d="M62 222V108a68 68 0 0136-61" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="5" stroke-linecap="round"/>'
+  +'<path d="M130 138c-8-10-24-9-24 4 0 10 12 17 24 26 12-9 24-16 24-26 0-13-16-14-24-4z" transform="translate(0 -52)" fill="url(#gHeart)"/>'
+  +'<circle cx="108" cy="180" r="30" fill="none" stroke="url(#gRing1)" stroke-width="10"/>'
+  +'<circle cx="152" cy="180" r="30" fill="none" stroke="url(#gRing2)" stroke-width="10"/>'
+  +'<path d="M139 156a30 30 0 010 48" fill="none" stroke="url(#gRing1)" stroke-width="10"/>'
+  +'<circle cx="216" cy="62" r="20" fill="url(#gSph)"/>'
+  +'<circle cx="38" cy="86" r="11" fill="url(#gSphP)"/>'
+  +'<circle cx="226" cy="150" r="7" fill="url(#gSphP)"/>'
+  +'<rect x="26" y="150" width="20" height="20" rx="6" fill="url(#gBarA)" transform="rotate(-14 36 160)"/>'
+  +'</svg>';
+}
+/* cincin torus + tiga balok untuk kartu total */
+function totalArt(){
+  return '<svg class="art" viewBox="0 0 220 180" aria-hidden="true">'
+  +'<ellipse cx="110" cy="168" rx="92" ry="8" fill="#2A1F7A" opacity=".18"/>'
+  +'<rect x="40" y="96" width="36" height="68" rx="9" fill="url(#gBarA)"/>'
+  +'<rect x="86" y="62" width="36" height="102" rx="9" fill="url(#gBarC)"/>'
+  +'<rect x="132" y="108" width="36" height="56" rx="9" fill="url(#gBarB)"/>'
+  +'<ellipse cx="146" cy="44" rx="48" ry="26" fill="none" stroke="url(#gRing1)" stroke-width="16" transform="rotate(-18 146 44)"/>'
+  +'<ellipse cx="146" cy="44" rx="48" ry="26" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="3" transform="rotate(-18 146 40)"/>'
+  +'<circle cx="34" cy="48" r="12" fill="url(#gSph)"/>'
+  +'</svg>';
+}
+function buildingArt(){
+  return '<svg class="big" viewBox="0 0 280 170" aria-hidden="true">'
+  +'<ellipse cx="140" cy="158" rx="112" ry="8" fill="#5B4DC0" opacity=".16"/>'
+  +'<rect x="38" y="70" width="204" height="86" rx="12" fill="url(#gBarA)"/>'
+  +'<polygon points="28,74 140,20 252,74" fill="url(#gArch)"/>'
+  +'<rect x="62" y="88" width="16" height="68" rx="6" fill="#fff" opacity=".7"/>'
+  +'<rect x="96" y="88" width="16" height="68" rx="6" fill="#fff" opacity=".7"/>'
+  +'<rect x="168" y="88" width="16" height="68" rx="6" fill="#fff" opacity=".7"/>'
+  +'<rect x="202" y="88" width="16" height="68" rx="6" fill="#fff" opacity=".7"/>'
+  +'<path d="M122 156v-30a18 18 0 0136 0v30z" fill="url(#gBarC)"/>'
+  +'<circle cx="140" cy="48" r="9" fill="url(#gSphP)"/>'
+  +'</svg>';
+}
+function tileAv(i){
+  var v=i%3, bg=["#D9D2F6","#F7D5C8","#C9C3F2"][v];
+  var inner=[
+    '<path d="M16 46V32a12 12 0 0124 0v14" fill="none" stroke="url(#gArch)" stroke-width="6" stroke-linecap="round"/><circle cx="28" cy="20" r="4" fill="url(#gSphP)"/>',
+    '<circle cx="22" cy="32" r="12" fill="none" stroke="url(#gRing1)" stroke-width="5"/><circle cx="34" cy="32" r="12" fill="none" stroke="url(#gRing2)" stroke-width="5"/>',
+    '<rect x="12" y="24" width="32" height="22" rx="5" fill="url(#gBarC)"/><polygon points="10,26 28,12 46,26" fill="url(#gArch)"/>'
+  ][v];
+  return '<svg viewBox="0 0 56 56"><rect width="56" height="56" fill="'+bg+'"/>'+inner+'</svg>';
+}
+function ini(n){
+  var w=n.replace(/[^A-Za-z ]/g,"").split(" ").filter(Boolean);
+  if(!w.length) return "V";
+  return (w[0][0]+(w[1]?w[1][0]:"")).toUpperCase();
+}
+var AVG=["linear-gradient(135deg,#9A8DEA,#6B6DD9)","linear-gradient(135deg,#F5B9A5,#E8847F)","linear-gradient(135deg,#B7AAF2,#8576E6)"];
+function avInit(name,i){return '<span class="av ini" style="background:'+AVG[i%3]+'">'+ini(name)+'</span>';}
+
+/* ============ SHARED PIECES ============ */
+function topbar(o){
+  o=o||{};
+  return '<div class="topbar">'
+   +'<button class="pill" data-act="area" aria-label="Ubah daerah">'+ic("pin")+'<span>'+esc(area(S.area).name)+'</span>'+ic("chev")+'</button>'
+   +(o.filter?'<button class="icon-btn" data-act="filter" aria-label="Filter gedung">'+ic("filter")+'</button>':'')
+   +'</div>';
+}
+function ptitle(t,s){return '<div class="ptitle"><h1>'+t+'</h1>'+(s?'<p>'+s+'</p>':'')+'</div>';}
+function filtered(){
+  var f=S.f, pax=S.b.pax;
+  var list=VENUES.map(function(v){return {v:v,d:dist(v),lo:lowest(v,pax)};});
+  list=list.filter(function(x){
+    if(f.guests && x.v.cap!=null && x.v.cap<f.guests) return false;
+    if(f.max && x.lo!=null && x.lo>f.max*M) return false;
+    if(f.type==="sewa" && x.v.kind!=="Sewa gedung") return false;
+    if(f.type==="paket" && x.v.kind==="Sewa gedung") return false;
+    return true;
+  });
+  list.sort(function(a,b){
+    if(f.sort==="murah"){ var av=a.lo==null?Infinity:a.lo, bv=b.lo==null?Infinity:b.lo; return av-bv || a.d-b.d; }
+    return a.d-b.d;
+  });
+  return list;
+}
+function priceShort(x){
+  var v=x.v;
+  if(x.lo==null) return '<span class="vp"><b class="muted" style="font-size:12.5px;font-weight:500">Tanya harga</b></span>';
+  var pk=v.pkgs.some(function(p){return p.unit==="pax";});
+  if(pk){
+    var p0=v.pkgs[0], per=p0.p*infl(v.year);
+    return '<span class="vp"><b class="num">Rp'+Math.round(per/1000)+' rb</b><small>mulai / tamu</small></span>';
+  }
+  return '<span class="vp"><b class="num">'+jt(x.lo)+'</b><small>mulai dari</small></span>';
+}
+
+/* ============ GEDUNG ============ */
+function viewGedung(){
+  var list=filtered(), A=area(S.area), first=A.name.split(",")[0];
+  var nearest=list.length?list[0].d:0;
+  var h=topbar({filter:true});
+  h+='<section class="welcome"><div class="wtxt"><h1>Wujudkan pernikahan impianmu</h1><p>'
+    +(list.length?list.length+" gedung dekat "+esc(first)+", terdekat "+fmtKm(nearest):"Belum ada gedung yang cocok dengan filter")
+    +'</p><button class="btn navy" data-act="tab" data-t="anggaran">Mulai hitung</button></div>'+heroArt()+'</section>';
+  h+='<div class="sechead"><h2>Gedung terdekat</h2><div class="seg" role="group" aria-label="Urutkan">'
+    +[["dekat","Terdekat"],["murah","Termurah"]].map(function(o){return '<button data-act="fsort" data-v="'+o[0]+'" class="'+(S.f.sort===o[0]?'on':'')+'">'+o[1]+'</button>';}).join("")+'</div></div>';
+  if(!list.length){
+    h+='<div class="g empty">Coba longgarkan filter jumlah tamu atau anggaran.<br><br><button class="btn" data-act="resetf">Reset filter</button></div>';
+  } else {
+    if(nearest>60) h+='<div class="note">Data gedung belum ada di sekitar '+esc(A.name)+'. Gedung di bawah ini yang terdekat, dan jaraknya cukup jauh.</div>';
+    h+='<div class="cols">'+list.map(function(x,i){return venueRow(x,i);}).join("")+'</div>';
+    h+='<p class="small muted">Harga memakai data artikel 2019-2020 yang disesuaikan ke 2026 dengan kenaikan 4,5% per tahun. Jarak dihitung garis lurus dari pusat daerah yang dipilih. Konfirmasi ke pengelola sebelum booking.'+dataNote()+'</p>';
+  }
+  return h;
+}
+function venueRow(x,i){
+  var v=x.v;
+  return '<button class="vrow g" data-act="venue" data-id="'+v.id+'"><span class="av">'+tileAv(i)+'</span><span class="vb"><b>'+esc(v.name)+'</b>'
+   +'<span class="small muted">'+fmtKm(x.d)+' · '+(v.cap?"hingga "+v.cap.toLocaleString("id-ID")+" tamu":"kapasitas belum ada data")+'</span></span>'+priceShort(x)+'</button>';
+}
+function distChart(cur){
+  var pax=S.b.pax, vals=[];
+  VENUES.forEach(function(v){var l=lowest(v,pax); if(l!=null) vals.push(l);});
+  if(vals.length<4||cur==null) return "";
+  var lg=vals.map(function(v){return Math.log10(v);});
+  var mn=Math.min.apply(null,lg)-0.15, mx=Math.max.apply(null,lg)+0.15, N=64, bw=0.14, pts=[], peak=0;
+  for(var i=0;i<=N;i++){
+    var x=mn+(mx-mn)*i/N, s=0;
+    lg.forEach(function(l){var z=(x-l)/bw; s+=Math.exp(-0.5*z*z);});
+    pts.push(s); if(s>peak) peak=s;
+  }
+  var W=360,H=140,top=34,base=H-6;
+  var xy=pts.map(function(s,i){return (W*i/N).toFixed(1)+","+(base-(s/peak)*(base-top)).toFixed(1);});
+  var line="M"+xy.join(" L"), area_=line+" L"+W+","+base+" L0,"+base+" Z";
+  var cx=W*(Math.log10(cur)-mn)/(mx-mn);
+  var sorted=vals.slice().sort(function(a,b){return a-b;}), med=sorted[Math.floor(sorted.length/2)];
+  var cw=84, chipX=Math.min(Math.max(cx-cw/2,0),W-cw), ff='font-family="Plus Jakarta Sans,sans-serif"';
+  return '<svg class="chart" viewBox="0 0 '+W+' '+(H+22)+'" role="img" aria-label="Sebaran harga gedung di data dan posisi gedung ini">'
+   +[top,(top+base)/2,base].map(function(y){return '<line x1="0" x2="'+W+'" y1="'+y+'" y2="'+y+'" stroke="var(--line)" stroke-width="1"/>';}).join("")
+   +'<path d="'+area_+'" fill="url(#gArea)"/>'
+   +'<path d="'+line+'" fill="none" stroke="url(#gLine)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>'
+   +'<line x1="'+cx.toFixed(1)+'" y1="'+(top-4)+'" x2="'+cx.toFixed(1)+'" y2="'+base+'" stroke="var(--primary)" stroke-width="2" stroke-dasharray="3 3"/>'
+   +'<circle cx="'+cx.toFixed(1)+'" cy="'+(top-4)+'" r="5" fill="var(--primary)"/>'
+   +'<rect x="'+chipX.toFixed(1)+'" y="0" width="'+cw+'" height="20" rx="10" fill="var(--soft)"/>'
+   +'<text x="'+(chipX+cw/2).toFixed(1)+'" y="14" text-anchor="middle" font-size="11" fill="var(--primary)" '+ff+' font-weight="600">Harga ini</text>'
+   +'<text x="0" y="'+(H+16)+'" font-size="10.5" fill="var(--muted)" '+ff+'>'+jt(sorted[0])+'</text>'
+   +'<text x="'+(W/2)+'" y="'+(H+16)+'" text-anchor="middle" font-size="10.5" fill="var(--muted)" '+ff+'>median '+jt(med)+'</text>'
+   +'<text x="'+W+'" y="'+(H+16)+'" text-anchor="end" font-size="10.5" fill="var(--muted)" '+ff+'>'+jt(sorted[sorted.length-1])+'</text>'
+   +'</svg>';
+}
+function viewDetail(){
+  var v=venue(UI.detail), pax=S.b.pax, d=dist(v), fav=S.favs.indexOf(v.id)>-1, cur=lowest(v,pax);
+  var catTxt={ya:"Katering sudah termasuk",cek:"Tanyakan apakah katering termasuk",tidak:"Katering belum termasuk, cari sendiri"}[v.cat];
+  var h='<div class="topbar"><button class="icon-btn" data-act="back" aria-label="Kembali">'+ic("back")+'</button><span class="spacer"></span>'
+   +'<button class="icon-btn'+(fav?' on':'')+'" data-act="fav" data-id="'+v.id+'" aria-pressed="'+fav+'" aria-label="'+(fav?"Hapus dari simpanan":"Simpan gedung")+'">'+ic("mark")+'</button></div>';
+  h+=ptitle(esc(v.name),esc(v.addr));
+  h+='<div class="media">'+buildingArt()+'<span class="mbadge">'+ic("bld")+'</span></div>';
+  h+='<div class="tiles"><div class="tile g"><span class="sq">'+ic("users")+'</span><b class="num">'+(v.cap?v.cap.toLocaleString("id-ID"):"-")+'</b><small>Kapasitas tamu</small></div>'
+   +'<div class="tile g"><span class="sq fill"><b>Rp</b></span><b class="num">'+(cur!=null?jt(cur):"-")+'</b><small>Mulai dari</small></div></div>';
+  h+='<div class="inforow g"><span class="av ini" style="background:'+AVG[1]+'">'+ic("pin")+'</span><span class="t">±'+fmtKm(d)+' dari '+esc(area(S.area).name.split(",")[0])+'<br><span class="small muted">'+esc(v.kind)+' · '+catTxt+'</span></span></div>';
+  if(v.phone) h+='<div class="inforow g"><span class="av ini" style="background:'+AVG[0]+'">'+ic("phone")+'</span><span class="t">Pengelola gedung</span><span class="small muted num">'+esc(v.phone)+'</span></div>';
+  if(!v.pkgs.length){
+    h+='<div class="note">Belum ada data harga untuk gedung ini. Hubungi pengelola untuk penawaran, lalu isi angkanya lewat tombol Ubah di tab Anggaran.</div>';
+  } else {
+    h+='<div><h2 style="font-size:19px">Paket harga</h2><p class="small muted" style="margin-top:4px">Referensi '+v.year+' ('+esc(v.src)+'), disesuaikan ke 2026 dengan faktor '+infl(v.year).toFixed(2).replace(".",",")+'×.</p></div>';
+    v.pkgs.forEach(function(p,i){
+      var est=pkgEst(v,p,pax), sel=S.b.venue&&S.b.venue.id===v.id&&S.b.venue.pi===i;
+      h+='<div class="pkg g'+(sel?' sel':'')+'"><div class="top"><b style="font-weight:500">'+esc(p.n)+'</b><span class="price num">'+jt(est)+'</span></div>'
+       +'<span class="small muted">'+(p.unit==="pax"?"Rp"+Math.round(p.p).toLocaleString("id-ID")+" per tamu pada "+v.year+" × "+Math.max(pax,p.min||0).toLocaleString("id-ID")+" tamu":"Tarif "+v.year+": "+jt(p.p))+'</span>'
+       +'<div><button class="btn sm'+(sel?'':' ghost')+'" data-act="usevenue" data-id="'+v.id+'" data-pi="'+i+'">'+(sel?ic("check")+" Dipakai di anggaran":"Pakai di anggaran")+'</button></div></div>';
+    });
+    if(v.extra) h+='<p class="small muted">'+esc(v.extra)+'</p>';
+    h+='<div class="g pad"><h3 style="font-size:16px">Posisi harga</h3><p class="small muted" style="margin:2px 0 8px">Dibanding '+VENUES.filter(function(x){return x.pkgs.length;}).length+' gedung di data, skala logaritmik. Sebagian sudah termasuk katering.</p>'+distChart(cur)+'</div>';
+  }
+  h+='<button class="btn navy wide" data-act="tab" data-t="anggaran">Buka anggaran</button>';
+  return h;
+}
+
+/* ============ VENDOR ============ */
+function vendorsFor(cat){
+  var A=area(S.area);
+  var list=VENDORS.filter(function(v){return v.cat===cat;}).map(function(v){
+    var home=area(v.home), covered=v.cov.indexOf(A.id)>-1||v.cov.indexOf(A.grp)>-1;
+    return {v:v,covered:covered,d:home?km(A.lat,A.lng,home.lat,home.lng):0};
+  });
+  list.sort(function(a,b){ if(a.covered!==b.covered) return a.covered?-1:1; return a.d-b.d; });
+  return list;
+}
+function viewVendor(){
+  var A=area(S.area), first=A.name.split(",")[0], cat=S.vcat, c=VCATS.filter(function(x){return x.id===cat;})[0]||VCATS[0];
+  var h=topbar()+ptitle("Vendor di "+esc(first),"EO, katering, MUA, hiburan, dan lainnya");
+  h+='<div class="scrollx" role="group" aria-label="Kategori vendor">'+VCATS.map(function(x){return '<button class="'+(x.id===c.id?'on':'')+'" data-act="vcat" data-id="'+x.id+'">'+x.label+'</button>';}).join("")+'</div>';
+  if(c.id==="emas"){ h+=goldCard(); }
+  else {
+    var list=vendorsFor(c.id);
+    if(list.length){
+      var inArea=list.filter(function(x){return x.covered;}), out=list.filter(function(x){return !x.covered;});
+      if(inArea.length) h+='<h2 style="font-size:19px">Melayani '+esc(first)+'</h2><div class="cols">'+inArea.map(vendorRow).join("")+'</div>';
+      else h+='<div class="note">Belum ada '+c.label+' di data untuk daerah ini. Di bawah ini yang ada di kota lain.</div>';
+      if(out.length) h+='<h2 style="font-size:19px">Di kota lain</h2><div class="cols">'+out.map(vendorRow).join("")+'</div>';
+    } else {
+      h+='<div class="note">Belum ada vendor '+c.label+' bernama di data. Pakai kisaran biaya di bawah untuk menyusun anggaran, lalu minta penawaran dari 2-3 vendor di daerahmu.</div>';
+    }
+    h+=rangeCard(c.item);
+  }
+  return h+'<p class="small muted">Daftar vendor bersumber dari artikel publik (lihat bagian sumber di tab Anggaran). Harga dapat berubah, jadi minta penawaran tertulis.</p>';
+}
+function vendorRow(x,i){
+  var v=x.v, fav=S.favs.indexOf(v.id)>-1;
+  var link=v.ig?'<a href="https://instagram.com/'+encodeURIComponent(v.ig)+'" target="_blank" rel="noopener">@'+esc(v.ig)+'</a>':(v.web?'<span class="num">'+esc(v.web)+'</span>':"");
+  return '<div class="g pkg" style="flex-direction:row;gap:14px;align-items:flex-start">'+avInit(v.name,i)
+   +'<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px"><b style="font-family:var(--font-d);font-weight:500;line-height:1.3">'+esc(v.name)+'</b>'
+   +'<span class="small muted">'+esc(v.loc)+(x.d>0&&!x.covered?" · ±"+fmtKm(x.d):"")+'</span>'
+   +(v.desc?'<span class="small">'+esc(v.desc)+'</span>':"")
+   +(v.price?'<span class="acc" style="font-weight:500">'+esc(v.price)+'</span>':'<span class="small muted">Harga belum ada di sumber, minta penawaran</span>')
+   +'<span class="small muted">'+(link?link+' · ':'')+esc(v.src)+'</span></div>'
+   +'<button class="x'+(fav?' on':'')+'" data-act="fav" data-id="'+v.id+'" aria-pressed="'+fav+'" aria-label="'+(fav?"Hapus dari simpanan":"Simpan vendor")+'">'+ic("mark")+'</button></div>';
+}
+function rangeCard(itemId){
+  var it=ITEMS.filter(function(x){return x.id===itemId;})[0]; if(!it||!it.r) return "";
+  var A=area(S.area), f=A.lvl, unitTxt=it.unit==="pax"?" / tamu":(it.unit==="qty"?" / set":"");
+  function rg(t){var a=it.r[t][0]*f,b=it.r[t][1]*f; return (it.unit==="pax"||it.unit==="qty")?rpFull(a)+" - "+rpFull(b)+unitTxt:jt(a)+" - "+jt(b);}
+  return '<div class="pkg g"><div class="top"><h3>Kisaran biaya '+esc(it.label.toLowerCase())+'</h3><span class="tag '+(it.basis==="sumber"?"src":"est")+'">'+(it.basis==="sumber"?"Ada sumber":"Estimasi")+'</span></div>'
+   +'<span class="small muted">'+esc(it.hint)+' Disesuaikan ke harga '+esc(A.name.split(",")[0])+'.</span>'
+   +['hemat','standar','premium'].map(function(t){return '<div class="top"><span style="text-transform:capitalize">'+t+'</span><b class="num" style="font-weight:500">'+rg(t)+'</b></div>';}).join("")+'</div>';
+}
+function goldCard(){
+  return '<div class="pkg g"><div class="top"><h3>Harga emas Antam</h3><span class="tag src">Ada sumber</span></div>'
+   +'<span class="price num">'+rpFull(S.b.gold)+' / gram</span>'
+   +'<span class="small muted">Harga jual 1 gram per '+GOLD_AS_OF+' (Bisnis.com). Ubah angkanya di tab Anggaran bila harga sudah bergerak.</span></div>'
+   +'<div class="pkg g"><h3>Cara hitung</h3><span class="small">Cincin kawin = berat × harga per gram × (kadar ÷ 24) × 1,12 (ongkos pembuatan sekitar 12%, estimasi). Mas kawin = gram emas 24K × harga per gram, ditambah seperangkat alat salat sekitar Rp1,5-3 jt.</span></div>'
+   +'<button class="btn navy wide" data-act="tab" data-t="anggaran">Hitung di anggaran</button>';
+}
+
+/* ============ ANGGARAN ============ */
+function viewBudget(){
+  var b=S.b, A=area(S.area);
+  var h=topbar();
+  h+='<section class="total"><div id="bigWrap"></div>'+totalArt()+'</section>';
+  h+='<div class="bgrid"><div class="col">';
+  h+='<div class="g pad" style="display:flex;flex-direction:column;gap:10px"><div class="top" style="display:flex;justify-content:space-between;align-items:center;gap:12px"><b style="font-family:var(--font-d);font-weight:500">Target anggaran</b>'
+    +'<span class="tgt"><input id="in-target" class="inp num" type="number" inputmode="decimal" min="0" step="10" value="'+(b.target/1e6)+'" data-in="target" aria-label="Target anggaran dalam juta rupiah"><span class="small muted">juta</span></span></div><div id="progBox"></div></div>';
+  h+='<div class="spills">'
+    +'<label class="spill g" for="in-pax">'+ic("users")+'<span>Tamu hadir (porsi)</span><input id="in-pax" class="pin num" type="number" inputmode="numeric" min="10" step="10" value="'+b.pax+'" data-in="pax"></label>'
+    +'<label class="spill g" for="in-qty">'+ic("shirt")+'<span>Seragam (set)</span><input id="in-qty" class="pin num" type="number" inputmode="numeric" min="0" step="1" value="'+b.qty+'" data-in="qty"></label>'
+    +'<div class="spill g">'+ic("list")+'<span>Item disertakan</span><b class="num" id="activeCnt"></b></div></div>';
+  h+='<p class="small muted" style="margin-top:-6px">Tamu hadir biasanya 1,5-2× jumlah undangan, karena satu undangan sering dibawa berdua.</p>';
+  h+='<div class="field"><label>Gaya acara</label><div class="seg" role="group" aria-label="Gaya acara">'+["hemat","standar","premium"].map(function(t){return '<button data-act="tier" data-t="'+t+'" class="'+(b.tier===t?'on':'')+'" style="text-transform:capitalize">'+t+'</button>';}).join("")+'</div></div>';
+  h+='<div id="venueBox"></div>';
+  h+='<div class="g pad"><h3 style="font-size:16px;margin-bottom:12px">Porsi anggaran</h3><div id="shareBox"></div></div>';
+  h+='</div><div class="col">';
+  h+='<div class="g pad"><h3 style="font-size:16px;margin-bottom:4px">Rincian biaya</h3><div class="items" id="itemsBox"></div></div>';
+  h+='<div id="goldBox"></div>';
+  h+='<div class="g pad"><h3 style="font-size:16px">Sumber data</h3><ul class="src-list" style="margin-top:8px">'+SOURCES.map(function(s){return '<li><a href="'+s[1]+'" target="_blank" rel="noopener">'+esc(s[0])+'</a></li>';}).join("")+'</ul></div>';
+  h+='<div class="note small">Label <b>Ada sumber</b> berarti angkanya turun dari harga di artikel di atas (2019-2026) lalu disesuaikan. Label <b>Estimasi</b> berarti kisaran pasar dari asumsi umum yang belum diverifikasi ke vendor. Faktor harga kota ('+String(A.lvl).replace(".",",")+'× untuk '+esc(A.name.split(",")[0])+') juga estimasi. Anggap hasil ini titik awal, lalu ganti dengan penawaran vendor lewat tombol Ubah.</div>';
+  return h+'</div></div>';
+}
+function bigHtml(r){
+  return '<div><p class="lbl">Perkiraan total untuk '+S.b.pax.toLocaleString("id-ID")+' tamu</p><p class="amt num">'+jt(r.mid)+'</p><p class="rng">Kisaran '+jt(r.low)+' - '+jt(r.high)+'<br>±'+jt(r.mid/Math.max(S.b.pax,1))+' per tamu</p></div>';
+}
+function progHtml(r){
+  var t=S.b.target, pct=t>0?r.mid/t*100:0, over=pct>100;
+  var txt=t>0?(over?"Melebihi target "+jt(r.mid-t):"Sisa "+jt(t-r.mid)+" dari target"):"Isi target untuk melihat sisa anggaran";
+  return '<div class="pct num" style="'+(over?'color:var(--warn)':'')+'">'+pct.toFixed(1).replace(".",",")+'%</div>'
+   +'<div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+Math.min(Math.round(pct),100)+'"><i style="width:'+Math.min(pct,100).toFixed(1)+'%"></i></div>'
+   +'<span class="small muted">'+txt+'</span>';
+}
+function paintShare(r){
+  var sb=$("#shareBox"); if(!sb) return;
+  var tot=r.sub.reduce(function(a,c){return a+c;},0)||1;
+  sb.innerHTML='<div class="bar" role="img" aria-label="Porsi anggaran per kelompok">'+r.sub.map(function(s,i){return '<span style="width:'+(s/tot*100).toFixed(2)+'%;background:var('+GROUPS[i].c+')"></span>';}).join("")+'</div>'
+   +'<div class="legend">'+r.sub.map(function(s,i){return '<span><i style="background:var('+GROUPS[i].c+')"></i><span style="min-width:0">'+GROUPS[i].n+' <b class="num" style="font-weight:600">'+Math.round(s/tot*100)+'%</b></span></span>';}).join("")+'</div>';
+}
+function amtText(x){ if(x.lo===0&&x.hi===0) return "Rp0"; return (Math.abs(x.hi-x.lo)<1)?jt(x.lo):jt(x.lo)+" - "+jt(x.hi); }
+function paintBudget(soft){
+  var r=calc(), b=S.b;
+  var w=$("#bigWrap"); if(w) w.innerHTML=bigHtml(r);
+  var pb=$("#progBox"); if(pb) pb.innerHTML=progHtml(r);
+  var ac=$("#activeCnt"); if(ac) ac.textContent=r.rows.filter(function(x){return x.on;}).length+"/"+r.rows.length;
+  paintShare(r);
+  if(soft){
+    var rows=document.querySelectorAll("#itemsBox .it");
+    r.rows.forEach(function(x,i){
+      if(x.it.id!==UI.editing||!rows[i]) return;
+      var bb=rows[i].querySelector(".am b"); if(bb) bb.textContent=amtText(x);
+    });
+    return;
+  }
+  var vb=$("#venueBox");
+  if(vb){
+    if(r.vc){
+      vb.innerHTML='<div class="pkg g sel"><div class="top"><b style="font-family:var(--font-d);font-weight:500">'+esc(r.vc.v.name)+'</b><button class="btn sm ghost" data-act="clearvenue">Lepas</button></div><span class="small muted">'+esc(r.vc.p.n)+' · '+jt(r.vc.est)+'</span>'
+       +(r.vc.p.unit==="pax"?'<span class="small">Paket per tamu: katering sudah termasuk.</span>':'<label class="small" style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="in-cat" data-in="cat" '+(b.cateringIncl?"checked":"")+'> Paket ini sudah termasuk katering</label>')+'</div>';
+    } else {
+      vb.innerHTML='<div class="pkg g"><b style="font-family:var(--font-d);font-weight:500">Gedung belum dipilih</b><span class="small muted">Anggaran memakai kisaran umum. Pilih gedung agar angkanya spesifik.</span><div><button class="btn sm" data-act="tab" data-t="gedung">Cari gedung</button></div></div>';
+    }
+  }
+  var ib=$("#itemsBox");
+  if(ib){
+    ib.innerHTML=r.rows.map(function(x){
+      var it=x.it;
+      var badge=it.basis==="sumber"?'<span class="tag src">Ada sumber</span>':(it.basis==="emas"?'<span class="tag src">Harga emas</span>':'<span class="tag est">Estimasi</span>');
+      var ed=UI.editing===it.id;
+      return '<div class="it'+(x.on?'':' off')+'"><button class="cb'+(x.on?' on':'')+'" data-act="toggle" data-id="'+it.id+'" aria-pressed="'+x.on+'" aria-label="Sertakan '+esc(it.label)+'">'+(x.on?ic("check"):"")+'</button>'
+       +'<div class="nm"><span>'+esc(it.label)+'</span><span class="small muted">'+esc(x.note)+'</span><span class="tags">'+badge+(x.ov?'<span class="tag">Angka sendiri</span>':'')+'</span>'
+       +(ed?'<div class="edit"><input id="in-ov" class="inp num" type="number" inputmode="decimal" min="0" step="0.5" placeholder="juta" value="'+(x.ov?(x.lo/1e6):'')+'" data-in="ov" data-id="'+it.id+'" aria-label="Angka sendiri dalam juta rupiah"><span class="small muted">juta</span><button class="btn sm ghost" data-act="ovreset" data-id="'+it.id+'">Reset</button></div>':'')+'</div>'
+       +'<div class="am"><b style="font-weight:600">'+amtText(x)+'</b><button data-act="edit" data-id="'+it.id+'" aria-label="Ubah angka '+esc(it.label)+'">'+(ed?"Selesai":"Ubah")+'</button></div></div>';
+    }).join("")
+    +'<div class="it'+(r.cad.on?'':' off')+'"><button class="cb'+(r.cad.on?' on':'')+'" data-act="toggle" data-id="cadangan" aria-pressed="'+r.cad.on+'" aria-label="Sertakan dana cadangan">'+(r.cad.on?ic("check"):"")+'</button>'
+    +'<div class="nm"><span>Dana cadangan 10%</span><span class="small muted">Untuk biaya tak terduga</span><span class="tags"><span class="tag est">Estimasi</span></span></div>'
+    +'<div class="am"><b style="font-weight:600">'+jt((r.cad.lo+r.cad.hi)/2)+'</b></div></div>';
+  }
+  var gb=$("#goldBox");
+  if(gb && !gb.dataset.done){
+    gb.dataset.done="1";
+    gb.innerHTML='<div class="pkg g" style="gap:14px"><h3>Emas: cincin dan mas kawin</h3>'
+     +'<div class="field"><label for="in-gold">Harga emas 24K per gram (Rp). Antam jual '+GOLD_AS_OF+'</label><input id="in-gold" class="inp num" type="number" inputmode="numeric" step="1000" value="'+b.gold+'" data-in="gold"></div>'
+     +'<div class="grid2"><div class="field"><label for="in-ringg">Berat cincin sepasang (g)</label><input id="in-ringg" class="inp num" type="number" inputmode="decimal" step="0.5" min="0" value="'+b.ringG+'" data-in="ringG"></div>'
+     +'<div class="field"><label for="in-ringk">Kadar emas</label><select id="in-ringk" class="inp" data-in="ringK">'+[24,22,18,17].map(function(k){return '<option value="'+k+'"'+(b.ringK===k?" selected":"")+'>'+k+'K</option>';}).join("")+'</select></div></div>'
+     +'<div class="grid2"><div class="field"><label for="in-mahr">Mas kawin (gram emas 24K)</label><input id="in-mahr" class="inp num" type="number" inputmode="decimal" step="0.5" min="0" value="'+b.mahrG+'" data-in="mahrG"></div>'
+     +'<div class="field"><label for="in-extra">Batu / berlian (Rp)</label><input id="in-extra" class="inp num" type="number" inputmode="numeric" step="100000" min="0" value="'+b.ringExtra+'" data-in="ringExtra"></div></div>'
+     +'<label class="small" style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="in-alat" data-in="alat" '+(b.alat?"checked":"")+'> Tambah seperangkat alat salat</label>'
+     +'<div class="field"><label for="in-nikah">Pencatatan nikah</label><select id="in-nikah" class="inp" data-in="nikah"><option value="kua"'+(b.nikah==="kua"?" selected":"")+'>Di KUA, jam kerja (gratis)</option><option value="luar"'+(b.nikah==="luar"?" selected":"")+'>Di luar KUA / luar jam kerja (Rp600.000)</option></select></div></div>';
+  }
+}
+
+/* ============ RENCANA (kalender) ============ */
+var BLN=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+var HARI=["Sen","Sel","Rab","Kam","Jum","Sab","Min"];
+function p2(n){return n<10?"0"+n:""+n;}
+function ymd(d){return d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate());}
+function curYM(){
+  if(UI.cal) return UI.cal;
+  var d=S.date?new Date(S.date+"T00:00:00"):new Date();
+  return d.getFullYear()+"-"+p2(d.getMonth()+1);
+}
+function calHtml(){
+  var parts=curYM().split("-"), y=+parts[0], m=+parts[1];
+  var off=(new Date(y,m-1,1).getDay()+6)%7, n=new Date(y,m,0).getDate(), today=ymd(new Date());
+  var c='<div class="calh"><h2>'+BLN[m-1]+' <span class="muted">'+y+'</span></h2><div class="btns"><button class="x" data-act="calnav" data-v="-1" aria-label="Bulan sebelumnya">'+ic("chevL")+'</button><button class="x" data-act="calnav" data-v="1" aria-label="Bulan berikutnya">'+ic("chevR")+'</button></div></div>';
+  c+='<div class="calg">'+HARI.map(function(d){return '<span class="wd">'+d+'</span>';}).join("");
+  for(var i=0;i<off;i++) c+='<span class="e"></span>';
+  for(var d=1;d<=n;d++){
+    var key=y+"-"+p2(m)+"-"+p2(d);
+    c+='<button data-act="pickday" data-d="'+key+'" class="'+(key===S.date?'sel ':'')+(key===today?'today':'')+'" aria-pressed="'+(key===S.date)+'" aria-label="'+d+' '+BLN[m-1]+' '+y+'">'+d+'</button>';
+  }
+  return c+'</div>';
+}
+function weekHtml(){
+  if(!S.date) return "";
+  var base=new Date(S.date+"T00:00:00"), out='';
+  for(var k=-2;k<=3;k++){
+    var d=new Date(base.getFullYear(),base.getMonth(),base.getDate()+k), key=ymd(d);
+    out+='<button data-act="pickday" data-d="'+key+'" class="'+(k===0?'sel':'')+'" aria-label="'+d.getDate()+' '+BLN[d.getMonth()]+'">'+d.getDate()+'</button>';
+  }
+  return '<div class="g week" role="group" aria-label="Pekan sekitar hari-H">'+out+'</div>';
+}
+function viewSimpan(){
+  var r=calc(), days=null, txt="Pilih tanggal rencana di kalender";
+  if(S.date){
+    var t=new Date(S.date+"T00:00:00"), n=new Date(); n.setHours(0,0,0,0); days=Math.round((t-n)/864e5);
+    txt=t.getDate()+" "+BLN[t.getMonth()]+" "+t.getFullYear();
+  }
+  var h=topbar()+ptitle("Rencana saya",null);
+  h+='<section class="total"><div><p class="lbl">'+esc(txt)+'</p><p class="amt num">'+(days==null?"-":(days>=0?days+" hari":"Sudah lewat"))+'</p><p class="rng">'+(days!=null&&days>=0?"menuju hari-H. Sebulan sekali cek ulang harga vendor.":"Ketuk tanggal di kalender untuk memulai hitung mundur.")+'</p></div>'+heroArt()+'</section>';
+  h+='<div class="bgrid"><div class="col"><div class="g cal">'+calHtml()+'</div>'+weekHtml()+'</div><div class="col">';
+  h+='<div class="g pkg"><div class="top"><h3>Anggaran saat ini</h3><span class="price num">'+jt(r.mid)+'</span></div><span class="small muted">'+S.b.pax.toLocaleString("id-ID")+' tamu · gaya '+S.b.tier+' · kisaran '+jt(r.low)+' - '+jt(r.high)+'</span><div><button class="btn sm ghost" data-act="tab" data-t="anggaran">Ubah anggaran</button></div></div>';
+  var fv=S.favs.map(function(id){return venue(id)||VENDORS.filter(function(v){return v.id===id;})[0];}).filter(Boolean);
+  h+='<h2 style="font-size:19px">Tersimpan</h2>';
+  if(!fv.length) h+='<div class="g empty">Belum ada yang disimpan. Ketuk ikon penanda di halaman gedung atau vendor.</div>';
+  else h+='<div style="display:flex;flex-direction:column;gap:12px">'+fv.map(function(x,i){
+    var isV=!!x.pkgs;
+    return '<div class="g vrow">'+(isV?'<span class="av">'+tileAv(i)+'</span>':avInit(x.name,i))
+     +'<button class="vb" style="text-align:left" '+(isV?'data-act="venue" data-id="'+x.id+'"':'data-act="tab" data-t="vendor"')+'><b>'+esc(x.name)+'</b><span class="small muted">'+(isV?esc(x.kind)+' · '+esc(area(x.area).name):esc(x.loc))+'</span></button>'
+     +'<button class="x" data-act="fav" data-id="'+x.id+'" aria-label="Hapus dari simpanan">'+ic("x")+'</button></div>';
+  }).join("")+'</div>';
+  return h+'</div></div>';
+}
+
+/* ============ SHELL ============ */
+var TABS=[["gedung","bld","Gedung"],["vendor","users","Vendor"],["anggaran","pie","Anggaran"],["simpan","cal","Rencana"]];
+function navHtml(){
+  var rail='<aside class="rail" aria-label="Menu samping">'+TABS.map(function(t){return '<button class="'+(S.tab===t[0]&&!UI.detail?'on':'')+'" data-act="tab" data-t="'+t[0]+'" aria-label="'+t[2]+'"'+(S.tab===t[0]?' aria-current="page"':'')+'>'+ic(t[1])+'</button>';}).join("")+'</aside>';
+  var bar='<nav class="tabbar" aria-label="Menu utama"><div class="in">'+TABS.map(function(t){return '<button class="tab'+(S.tab===t[0]&&!UI.detail?' on':'')+'" data-act="tab" data-t="'+t[0]+'"'+(S.tab===t[0]?' aria-current="page"':'')+'>'+ic(t[1])+'<span>'+t[2]+'</span></button>';}).join("")+'</div></nav>';
+  return {rail:rail,bar:bar};
+}
+function sheetArea(){
+  return '<div class="scrim" data-act="closesheet"><div class="panel" role="dialog" aria-label="Pilih daerah"><div class="ph"><h2>Pilih daerah</h2><button class="x" data-act="closesheet" aria-label="Tutup">'+ic("x")+'</button></div>'
+   +'<input id="in-q" class="inp" type="search" placeholder="Ketik kota atau area, misal BSD, Bandung" autocomplete="off" value="'+esc(UI.q)+'" data-in="q"><div id="areaList"></div></div></div>';
+}
+function paintAreas(){
+  var q=UI.q.trim().toLowerCase(), box=$("#areaList"); if(!box) return;
+  var l=AREAS.filter(function(a){return !q||a.name.toLowerCase().indexOf(q)>-1;});
+  box.innerHTML=l.length?l.map(function(a){return '<button class="opt'+(a.id===S.area?' on':'')+'" data-act="setarea" data-id="'+a.id+'"><b style="font-weight:500">'+esc(a.name)+'</b>'+(a.id===S.area?ic("check"):"")+'</button>';}).join(""):'<div class="empty">Daerah belum tersedia. Pilih kota terdekat dari daftar, misalnya Jakarta Selatan, Bandung, atau Yogyakarta.</div>';
+}
+function sheetFilter(){
+  var f=S.f;
+  return '<div class="scrim" data-act="closesheet"><div class="panel" role="dialog" aria-label="Filter gedung"><div class="ph"><h2>Filter gedung</h2><button class="x" data-act="closesheet" aria-label="Tutup">'+ic("x")+'</button></div>'
+   +'<div class="grid2"><div class="field"><label for="f-guests">Jumlah tamu minimal</label><input id="f-guests" class="inp num" type="number" inputmode="numeric" step="50" min="0" value="'+(f.guests||"")+'" placeholder="Semua" data-in="fguests"></div>'
+   +'<div class="field"><label for="f-max">Biaya maksimal (juta)</label><input id="f-max" class="inp num" type="number" inputmode="numeric" step="10" min="0" value="'+(f.max||"")+'" placeholder="Bebas" data-in="fmax"></div></div>'
+   +'<div class="field"><label>Jenis</label><div class="seg">'+[["semua","Semua"],["sewa","Sewa saja"],["paket","Paket"]].map(function(o){return '<button data-act="ftype" data-v="'+o[0]+'" class="'+(f.type===o[0]?'on':'')+'">'+o[1]+'</button>';}).join("")+'</div></div>'
+   +'<div class="field"><label>Urutkan</label><div class="seg">'+[["dekat","Terdekat"],["murah","Termurah"]].map(function(o){return '<button data-act="fsort" data-v="'+o[0]+'" class="'+(f.sort===o[0]?'on':'')+'">'+o[1]+'</button>';}).join("")+'</div></div>'
+   +'<div class="btns"><button class="btn navy" data-act="closesheet">Tampilkan hasil</button><button class="btn ghost" data-act="resetf">Reset</button></div></div></div>';
+}
+function render(keepScroll){
+  var body;
+  if(UI.detail) body=viewDetail();
+  else if(S.tab==="gedung") body=viewGedung();
+  else if(S.tab==="vendor") body=viewVendor();
+  else if(S.tab==="anggaran") body=viewBudget();
+  else body=viewSimpan();
+  var nv=navHtml();
+  $("#app").innerHTML='<div class="shell">'+nv.rail+'<main class="main">'+body+'</main></div>'+nv.bar+(UI.sheet==="area"?sheetArea():UI.sheet==="filter"?sheetFilter():"");
+  if(S.tab==="anggaran"&&!UI.detail) paintBudget();
+  if(UI.sheet==="area"){ paintAreas(); var q=$("#in-q"); if(q) q.focus(); }
+  if(!keepScroll) window.scrollTo(0,0);
+}
+
+/* ============ EVENTS ============ */
+document.addEventListener("click",function(e){
+  var el=e.target.closest("[data-act]"); if(!el) return;
+  var a=el.getAttribute("data-act"), id=el.getAttribute("data-id");
+  if(a==="closesheet"){ if(el.classList.contains("scrim")&&e.target!==el) return; UI.sheet=null; render(true); return; }
+  if(a==="tab"){ S.tab=el.getAttribute("data-t"); UI.detail=null; UI.sheet=null; save(); render(); return; }
+  if(a==="area"){ UI.sheet="area"; UI.q=""; render(true); return; }
+  if(a==="filter"){ UI.sheet="filter"; render(true); return; }
+  if(a==="setarea"){ S.area=id; UI.sheet=null; save(); render(true); return; }
+  if(a==="venue"){ UI.scroll=window.scrollY; UI.detail=id; render(); return; }
+  if(a==="back"){ UI.detail=null; render(true); window.scrollTo(0,UI.scroll); return; }
+  if(a==="fav"){ var i=S.favs.indexOf(id); if(i>-1) S.favs.splice(i,1); else S.favs.push(id); save(); render(true); return; }
+  if(a==="usevenue"){ var v=venue(id), pi=Number(el.getAttribute("data-pi")); S.b.venue={id:id,pi:pi}; S.b.cateringIncl=(v.cat==="ya"); save(); render(true); return; }
+  if(a==="clearvenue"){ S.b.venue=null; S.b.cateringIncl=false; save(); paintBudget(); return; }
+  if(a==="tier"){ S.b.tier=el.getAttribute("data-t"); save(); render(true); return; }
+  if(a==="toggle"){ S.b.on[id]=(S.b.on[id]===false); save(); paintBudget(); return; }
+  if(a==="edit"){ UI.editing=(UI.editing===id?null:id); paintBudget(); var o=$("#in-ov"); if(o) o.focus(); return; }
+  if(a==="ovreset"){ delete S.b.over[id]; UI.editing=null; save(); paintBudget(); return; }
+  if(a==="vcat"){ S.vcat=id; save(); render(true); return; }
+  if(a==="ftype"){ S.f.type=el.getAttribute("data-v"); save(); render(true); return; }
+  if(a==="fsort"){ S.f.sort=el.getAttribute("data-v"); save(); render(true); return; }
+  if(a==="resetf"){ S.f={guests:0,max:0,type:"semua",sort:"dekat"}; save(); render(true); return; }
+  if(a==="calnav"){ var pp=curYM().split("-"), dd=new Date(+pp[0],+pp[1]-1+Number(el.getAttribute("data-v")),1); UI.cal=dd.getFullYear()+"-"+p2(dd.getMonth()+1); render(true); return; }
+  if(a==="pickday"){ var key=el.getAttribute("data-d"); S.date=(S.date===key&&el.closest(".calg")?"":key); UI.cal=null; save(); render(true); return; }
+});
+document.addEventListener("input",function(e){
+  var el=e.target, k=el.getAttribute&&el.getAttribute("data-in"); if(!k) return;
+  var v=el.value, n=parseFloat(v);
+  if(k==="q"){ UI.q=v; paintAreas(); return; }
+  if(k==="fguests"){ S.f.guests=isNaN(n)?0:n; save(); return; }
+  if(k==="fmax"){ S.f.max=isNaN(n)?0:n; save(); return; }
+  if(k==="cat"){ S.b.cateringIncl=el.checked; save(); paintBudget(); return; }
+  if(k==="alat"){ S.b.alat=el.checked; save(); paintBudget(); return; }
+  if(k==="nikah"){ S.b.nikah=v; save(); paintBudget(); return; }
+  if(k==="ringK"){ S.b.ringK=n; save(); paintBudget(); return; }
+  if(k==="target"){ S.b.target=isNaN(n)||n<0?0:n*1e6; save(); paintBudget(true); return; }
+  if(k==="ov"){ var id=el.getAttribute("data-id"); if(isNaN(n)) delete S.b.over[id]; else S.b.over[id]=n*1e6; save(); paintBudget(true); return; }
+  if(k==="gold") S.b.goldEdited=true;
+  if(["pax","qty","gold","ringG","mahrG","ringExtra"].indexOf(k)>-1){ S.b[k]=isNaN(n)||n<0?0:n; save(); paintBudget(); return; }
+});
+document.addEventListener("change",function(e){
+  var k=e.target.getAttribute&&e.target.getAttribute("data-in");
+  if(k==="fguests"||k==="fmax") render(true);
+});
+document.addEventListener("keydown",function(e){ if(e.key==="Escape"&&UI.sheet){UI.sheet=null; render(true);} });
+var DATA_META=null;
+function dataNote(){
+  if(!DATA_META||!DATA_META.updatedAt) return "";
+  var t=new Date(DATA_META.updatedAt), txt=" Data diperbarui "+t.getDate()+" "+BLN[t.getMonth()]+" "+t.getFullYear()+".";
+  if(DATA_META.gold&&DATA_META.gold.stale) txt+=" Harga emas belum berhasil diperbarui bulan ini.";
+  return txt;
+}
+function applyData(d){
+  if(d.venues&&d.venues.length) VENUES=d.venues;
+  if(d.vendors&&d.vendors.length) VENDORS=d.vendors;
+  if(d.gold&&d.gold.price){ GOLD_AS_OF=d.gold.asOf||GOLD_AS_OF; if(!S.b.goldEdited) S.b.gold=d.gold.price; }
+  DATA_META=d;
+}
+render();
+try{
+  fetch("data/data.json",{cache:"no-cache"}).then(function(r){return r.ok?r.json():null;}).then(function(d){
+    if(!d) return; applyData(d);
+    if(!UI.sheet&&!UI.editing&&document.activeElement===document.body) render(true);
+  }).catch(function(){});
+}catch(e){}
+</script>
+
+</body>
+</html>
