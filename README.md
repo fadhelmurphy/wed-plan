@@ -2,14 +2,9 @@
 
 Cari gedung pernikahan terdekat, lihat vendor, dan hitung anggaran. Situs statis, tanpa build.
 
-## Deploy
-1. Push isi folder ini ke branch `main`.
-2. Settings > Pages > Source: **GitHub Actions**.
-3. Alamat: `https://<username>.github.io/<nama-repo>/`.
-
 ## Pembaruan bulanan
 Workflow `pages.yml` jalan otomatis tanggal 1 tiap bulan (09:00 WIB), atau manual lewat tab Actions > Run workflow.
-Skrip `scripts/update.mjs` memperbarui `data/data.json`, lalu situs dideploy ulang. Commit dibuat oleh `github-actions[bot]`.
+Skrip `scripts/update.mjs` memperbarui `data/data.json`. Commit dibuat oleh `github-actions[bot]`.
 
 | Data | Sumber | Otomatis |
 |---|---|---|
