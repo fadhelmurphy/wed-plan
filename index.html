@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="Cari gedung pernikahan terdekat, vendor, dan hitung anggaran pernikahan.">
 <meta name="theme-color" content="#DDD8F1">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>*{box-sizing:border-box}html{color-scheme:light}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
 <title>Rencana Nikah</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -87,6 +89,8 @@ a{color:var(--primary)}
 .art{position:absolute;right:-10px;bottom:-8px;width:56%;max-width:300px;height:auto;z-index:1}
 .total{padding:22px 22px 24px;min-height:190px}
 .total .art{width:46%;bottom:-6px;right:-6px;max-width:200px}
+.total .btn{position:relative;z-index:2;margin-top:16px}
+.total .btn svg{width:18px;height:18px}
 .total .lbl{font-size:13px;opacity:.92}
 .total .amt{font-family:var(--font-d);font-weight:700;font-size:38px;line-height:1.15;margin-top:6px}
 .total .rng{font-size:12.5px;opacity:.95;margin-top:6px;max-width:68%}
@@ -217,6 +221,11 @@ a{color:var(--primary)}
 .opt.on b{color:var(--primary)}
 .src-list{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:12px}
 
+@media print{
+  .tabbar,.rail,.topbar,.dots,.scrim,.total .btn,.art{display:none!important}
+  body{background:#fff!important;padding:0}
+  .g,.total{box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+}
 @media (min-width:640px){
   .cols{grid-template-columns:1fr 1fr}
   .welcome h1{font-size:36px}
@@ -487,6 +496,7 @@ function ic(n){
     cal:'<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/>',
     shirt:'<path d="M8 4L3 7l2 4 3-1v10h8V10l3 1 2-4-5-3a4 4 0 01-8 0z"/>',
     list:'<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8 9h8M8 13h8M8 17h4"/>',
+    down:'<path d="M12 4v10M7.5 10l4.5 4.5 4.5-4.5M5 19h14"/>',
     target:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/>'
   };
   return '<svg class="i" viewBox="0 0 24 24" aria-hidden="true">'+P[n]+'</svg>';
@@ -727,7 +737,7 @@ function goldCard(){
 function viewBudget(){
   var b=S.b, A=area(S.area);
   var h=topbar();
-  h+='<section class="total"><div id="bigWrap"></div>'+totalArt()+'</section>';
+  h+='<section class="total"><div id="bigWrap"></div><button class="btn navy" data-act="pdf">'+ic("down")+'Unduh PDF</button>'+totalArt()+'</section>';
   h+='<div class="bgrid"><div class="col">';
   h+='<div class="g pad" style="display:flex;flex-direction:column;gap:10px"><div class="top" style="display:flex;justify-content:space-between;align-items:center;gap:12px"><b style="font-family:var(--font-d);font-weight:500">Target anggaran</b>'
     +'<span class="tgt"><input id="in-target" class="inp num" type="number" inputmode="decimal" min="0" step="10" value="'+(b.target/1e6)+'" data-in="target" aria-label="Target anggaran dalam juta rupiah"><span class="small muted">juta</span></span></div><div id="progBox"></div></div>';
@@ -929,6 +939,7 @@ document.addEventListener("click",function(e){
   if(a==="ftype"){ S.f.type=el.getAttribute("data-v"); save(); render(true); return; }
   if(a==="fsort"){ S.f.sort=el.getAttribute("data-v"); save(); render(true); return; }
   if(a==="resetf"){ S.f={guests:0,max:0,type:"semua",sort:"dekat"}; save(); render(true); return; }
+  if(a==="pdf"){ downloadPdf(); return; }
   if(a==="calnav"){ var pp=curYM().split("-"), dd=new Date(+pp[0],+pp[1]-1+Number(el.getAttribute("data-v")),1); UI.cal=dd.getFullYear()+"-"+p2(dd.getMonth()+1); render(true); return; }
   if(a==="pickday"){ var key=el.getAttribute("data-d"); S.date=(S.date===key&&el.closest(".calg")?"":key); UI.cal=null; save(); render(true); return; }
 });
@@ -953,6 +964,55 @@ document.addEventListener("change",function(e){
 });
 document.addEventListener("keydown",function(e){ if(e.key==="Escape"&&UI.sheet){UI.sheet=null; render(true);} });
 var DATA_META=null;
+function downloadPdf(){
+  var J=window.jspdf;
+  if(!J||!J.jsPDF){ window.print(); return; }
+  var r=calc(), b=S.b, A=area(S.area), now=new Date();
+  var doc=new J.jsPDF({unit:"pt",format:"a4"}), W=doc.internal.pageSize.getWidth(), H=doc.internal.pageSize.getHeight(), mx=40;
+  var tgl=now.getDate()+" "+BLN[now.getMonth()]+" "+now.getFullYear();
+  var purple=[107,109,217], ink=[36,35,63], muted=[118,116,154];
+  doc.setFillColor(purple[0],purple[1],purple[2]); doc.rect(0,0,W,104,"F");
+  doc.setTextColor(255,255,255); doc.setFont("helvetica","bold"); doc.setFontSize(21); doc.text("Rencana Anggaran Pernikahan",mx,52);
+  doc.setFont("helvetica","normal"); doc.setFontSize(10); doc.text("Dibuat "+tgl+"  |  "+A.name,mx,74);
+  var y=140;
+  doc.setTextColor(muted[0],muted[1],muted[2]); doc.setFontSize(10); doc.text("Perkiraan total untuk "+b.pax.toLocaleString("id-ID")+" tamu",mx,y);
+  doc.setTextColor(ink[0],ink[1],ink[2]); doc.setFont("helvetica","bold"); doc.setFontSize(30); doc.text(jt(r.mid),mx,y+34);
+  doc.setFont("helvetica","normal"); doc.setFontSize(10); doc.setTextColor(muted[0],muted[1],muted[2]);
+  doc.text("Kisaran "+jt(r.low)+" - "+jt(r.high)+"  |  sekitar "+jt(r.mid/Math.max(b.pax,1))+" per tamu",mx,y+54);
+  var t=b.target, pct=t>0?r.mid/t*100:0;
+  var info=[["Gaya acara",b.tier.charAt(0).toUpperCase()+b.tier.slice(1)],["Jumlah seragam",b.qty+" set"],
+    ["Gedung",r.vc?r.vc.v.name+" ("+r.vc.p.n+")":"Belum dipilih (kisaran umum)"],
+    ["Target anggaran",t>0?jt(t)+" ("+pct.toFixed(1).replace(".",",")+"% terpakai)":"Belum diisi"],
+    ["Tanggal rencana",S.date?(function(d){return d.getDate()+" "+BLN[d.getMonth()]+" "+d.getFullYear();})(new Date(S.date+"T00:00:00")):"Belum dipilih"],
+    ["Harga emas 24K",rpFull(b.gold)+" / gram"]];
+  doc.autoTable({startY:y+72,body:info,theme:"plain",styles:{fontSize:9.5,cellPadding:{top:3,bottom:3,left:0,right:8},textColor:ink},columnStyles:{0:{textColor:muted,cellWidth:110}},margin:{left:mx,right:mx}});
+  var rows=r.rows.filter(function(x){return x.on;}).map(function(x){
+    var basis=x.it.basis==="sumber"?"Ada sumber":(x.it.basis==="emas"?"Harga emas":"Estimasi");
+    return [x.it.label,x.note,amtText(x),x.ov?"Angka sendiri":basis];
+  });
+  if(r.cad.on) rows.push(["Dana cadangan 10%","Biaya tak terduga",jt((r.cad.lo+r.cad.hi)/2),"Estimasi"]);
+  doc.autoTable({startY:doc.lastAutoTable.finalY+18,head:[["Item","Keterangan","Biaya","Dasar"]],body:rows,
+    foot:[["Total","Kisaran "+jt(r.low)+" - "+jt(r.high),jt(r.mid),""]],
+    theme:"striped",headStyles:{fillColor:purple,textColor:255,fontSize:9},footStyles:{fillColor:[228,225,248],textColor:ink,fontSize:9.5},
+    styles:{fontSize:8.5,cellPadding:5,textColor:ink,overflow:"linebreak"},alternateRowStyles:{fillColor:[247,245,253]},
+    columnStyles:{0:{cellWidth:130},1:{cellWidth:"auto"},2:{cellWidth:92,halign:"right"},3:{cellWidth:70}},margin:{left:mx,right:mx,bottom:50}});
+  var tot=r.sub.reduce(function(a,c){return a+c;},0)||1;
+  var gy=doc.lastAutoTable.finalY+18;
+  if(gy>H-190){ doc.addPage(); gy=50; }
+  doc.autoTable({startY:gy,head:[["Kelompok","Porsi"]],body:r.sub.map(function(sv,i){return [GROUPS[i].n,Math.round(sv/tot*100)+"%"];}),
+    theme:"striped",headStyles:{fillColor:purple,textColor:255,fontSize:9},styles:{fontSize:8.5,cellPadding:5,textColor:ink},
+    columnStyles:{1:{halign:"right",cellWidth:60}},margin:{left:mx,right:mx,bottom:50},tableWidth:260});
+  var y2=doc.lastAutoTable.finalY+22;
+  var notes=["Catatan","Angka berlabel Ada sumber diturunkan dari harga di artikel publik (2019-2026) lalu disesuaikan kenaikan 4,5% per tahun. Angka berlabel Estimasi adalah kisaran pasar dari asumsi umum dan belum diverifikasi ke vendor. Faktor harga kota ("+String(A.lvl).replace(".",",")+"x untuk "+A.name.split(",")[0]+") juga estimasi. Ini perkiraan, bukan penawaran: minta penawaran tertulis dari vendor.",
+    DATA_META&&DATA_META.updatedAt?"Data terakhir diperbarui "+(function(d){return d.getDate()+" "+BLN[d.getMonth()]+" "+d.getFullYear();})(new Date(DATA_META.updatedAt))+(DATA_META.gold&&DATA_META.gold.asOf?"; harga emas per "+DATA_META.gold.asOf+".":"."):""];
+  var lines=doc.splitTextToSize(notes[1]+" "+notes[2],W-2*mx);
+  if(y2+16+lines.length*11>H-60){ doc.addPage(); y2=60; }
+  doc.setFont("helvetica","bold"); doc.setFontSize(10); doc.setTextColor(ink[0],ink[1],ink[2]); doc.text(notes[0],mx,y2);
+  doc.setFont("helvetica","normal"); doc.setFontSize(8.5); doc.setTextColor(muted[0],muted[1],muted[2]); doc.text(lines,mx,y2+15);
+  var n=doc.getNumberOfPages();
+  for(var i=1;i<=n;i++){ doc.setPage(i); doc.setFontSize(8); doc.setTextColor(muted[0],muted[1],muted[2]); doc.text("Rencana Nikah  |  halaman "+i+" dari "+n,mx,H-28); }
+  doc.save("rencana-nikah-"+now.getFullYear()+"-"+p2(now.getMonth()+1)+"-"+p2(now.getDate())+".pdf");
+}
 function dataNote(){
   if(!DATA_META||!DATA_META.updatedAt) return "";
   var t=new Date(DATA_META.updatedAt), txt=" Data diperbarui "+t.getDate()+" "+BLN[t.getMonth()]+" "+t.getFullYear()+".";
